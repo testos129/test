@@ -1,0 +1,38 @@
+# Active ou non le système d'avis et notations sur les produits ainsi que leur affichage
+FILTER_PRODUCT_REVIEWS_ENABLED: true
+
+# Active ou non la possibilité de laisser et voir des commentaires textuels sur les produits
+FILTER_PRODUCT_COMMENTS_ENABLED: false
+
+# Active la fonctionalité de masquage du prix sur les produits ('true' = les prix peuvent être masqués sur certains produits, 'false' = tous les prix sont affichés)
+FILTER_PRICE_DISPLAY_ENABLED: true
+
+# Affiche les recommandations de produits similaires sur la page d'un produit
+FILTER_RECOMMENDATIONS_ENABLED: true
+
+# NOT USED
+FILTER_ORDER_PRODUCTS_ENABLED: true
+
+# Affiche les tags sur les produits
+DISPLAY_TAGS_ENABLED: true
+
+# Permet de filtrer les produits par nom de fournisseur
+ENABLE_FILTER_PROVIDER_NAME: false
+
+# Active l'envoie d'email de confirmation pour le statut confirmé (quand false, confirmation des utilisateurs par défaut)
+EMAIL_CONFIRMATION_SIGN_UP_ENABLED: false
+
+# NOT USED
+PASSWORD_RESET_ENABLED: true
+
+# NOT USED
+DELETE_ACCOUNT_ENABLED: true
+
+# NOT USED
+ADMIN_PASSWORD_ENABLED: true
+
+# Permet au livreur d’annuler une livraison en cours
+ALLOW_DELIVERY_CANCEL: false
+
+# Fixe une longueur minimale de mot de passe à l'inscription
+ENABLE_MIN_PASSWORD_LENGHT: false

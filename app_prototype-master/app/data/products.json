@@ -1,0 +1,2550 @@
+{
+    "1": {
+        "name": "Doliprane",
+        "provider": "Sanofi",
+        "image": "data\\images\\Doliprane.webp",
+        "description": "Antalgique et antipyrétique à base de paracétamol, utilisé pour soulager douleurs et fièvre.",
+        "reference": "Boîte de 8 comprimés 1 g",
+        "component": [
+            "Paracétamol"
+        ],
+        "tags": [
+            "fièvre",
+            "analgésique",
+            "douleur"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "2": {
+        "name": "Dafalgan",
+        "provider": "UPSA",
+        "image": "data\\images\\Dafalgan.webp",
+        "description": "Antalgique et antipyrétique similaire à Doliprane, à base de paracétamol.",
+        "reference": "Boîte de 8 comprimés 500 mg",
+        "component": [
+            "Paracétamol"
+        ],
+        "tags": [
+            "douleur",
+            "fièvre",
+            "analgésique"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "3": {
+        "name": "Levothyrox",
+        "provider": "Merck",
+        "image": "data\\images\\Levothyrox.webp",
+        "description": "Hormone thyroïdienne de substitution utilisée dans l'hypothyroïdie.",
+        "reference": "Boîte de 100 µg, 28 comprimés",
+        "component": [
+            "Levothyroxine"
+        ],
+        "tags": [
+            "thyroïde",
+            "hormone",
+            "hypothyroïdie"
+        ],
+        "category": "medicine",
+        "age_group": "children",
+        "allow_reviews": false,
+        "display_price": false,
+        "allow_order": false,
+        "display_recommendations": false,
+        "ordonnance": true
+    },
+    "4": {
+        "name": "Ventoline",
+        "provider": "GSK",
+        "image": "data\\images\\Ventoline.webp",
+        "description": "Bronchodilatateur (salbutamol) utilisé en cas de crises d'asthme.",
+        "reference": "Inhalateur 100 µg/dose, 200 doses",
+        "component": [
+            "Salbutamol"
+        ],
+        "tags": [
+            "asthme",
+            "bronchodilatateur",
+            "respiration"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "5": {
+        "name": "Spasfon",
+        "provider": "B. Bromba",
+        "image": "data\\images\\Spasfon.webp",
+        "description": "Antispasmodique utilisé pour soulager les douleurs spasmodiques viscérales.",
+        "reference": "Boîte de 20 comprimés",
+        "component": [
+            "Phloroglucinol"
+        ],
+        "tags": [
+            "spasme",
+            "douleurs abdominales",
+            "antispasmodique"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": false,
+        "allow_order": false,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "6": {
+        "name": "Zymad",
+        "provider": "UPSAmédic",
+        "image": "data\\images\\Zymad.webp",
+        "description": "Supplément de vitamine D, souvent prescrit pour prévenir les carences.",
+        "reference": "Boîte de 30 comprimés",
+        "component": [
+            "Vitamine D"
+        ],
+        "tags": [
+            "vitamine",
+            "prévention",
+            "os"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "7": {
+        "name": "Kardegic",
+        "provider": "AstraZeneca",
+        "image": "data\\images\\Kardegic.webp",
+        "description": "Antiagrégant plaquettaire à base d'acide acétylsalicylique à faible dose.",
+        "reference": "Boîte de 30 comprimés 75 mg",
+        "component": [
+            "Acide acétylsalicylique"
+        ],
+        "tags": [
+            "cardiovasculaire",
+            "prévention AVC",
+            "antiagrégant"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "8": {
+        "name": "Augmentin",
+        "provider": "GSK",
+        "image": "data\\images\\Augmentin.webp",
+        "description": "Antibiotique à base d'amoxicilline et acide clavulanique, pour infectsions bactériennes.",
+        "reference": "Comprimés 500 mg + 125 mg, boîte de 20",
+        "component": [
+            "Amoxicilline",
+            "Acide clavulanique"
+        ],
+        "tags": [
+            "antibiotique",
+            "infection",
+            "bactérien"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "9": {
+        "name": "Imodium",
+        "provider": "Sanofi",
+        "image": "data\\images\\Imodium.webp",
+        "description": "Antidiarrhéique (lopéramide) pour soulager les épisodes de diarrhée aiguë.",
+        "reference": "Boîte de 20 gélules 2 mg",
+        "component": [
+            "Lopéramide"
+        ],
+        "tags": [
+            "diarrhée",
+            "gastro",
+            "antidiarrhéique"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "10": {
+        "name": "Amoxicilline",
+        "provider": "Sanofi",
+        "image": "data\\images\\Amoxicilline.webp",
+        "description": "Antibiotique de la famille des bêtalactamines, utilisé pour de nombreuses infections.",
+        "reference": "Comprimés 500 mg, boîte de 24",
+        "component": [
+            "Amoxicilline"
+        ],
+        "tags": [
+            "antibiotique",
+            "infection",
+            "bactérien"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "11": {
+        "name": "Tramadol",
+        "provider": "Grünenthal",
+        "image": "data\\images\\Tramadol.webp",
+        "description": "Antalgique opioïde de palier II pour douleurs modérées à sévères.",
+        "reference": "Gélules 50 mg, boîte de 30",
+        "component": [
+            "Tramadol"
+        ],
+        "tags": [
+            "douleur",
+            "opioïde",
+            "analgésique"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "12": {
+        "name": "Ibuprofène",
+        "provider": "Nurofen",
+        "image": "data\\images\\Ibuprofène.webp",
+        "description": "Anti-inflammatoire non stéroïdien (AINS), soulage douleurs, fièvre et inflammations.",
+        "reference": "Comprimés 400 mg, boîte de 16",
+        "component": [
+            "Ibuprofène"
+        ],
+        "tags": [
+            "douleur",
+            "fièvre",
+            "anti-inflammatoire"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "13": {
+        "name": "Clopidogrel",
+        "provider": "Sanofi",
+        "image": "data\\images\\Clopidogrel.webp",
+        "description": "Antiagrégant plaquettaire, utilisé notamment après syndromes coronariens.",
+        "reference": "Comprimés 75 mg, boîte de 30",
+        "component": [
+            "Clopidogrel"
+        ],
+        "tags": [
+            "cardiovasculaire",
+            "prévention",
+            "antiagrégant"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "14": {
+        "name": "Oméprazole",
+        "provider": "Sanofi",
+        "image": "data\\images\\Oméprazole.webp",
+        "description": "Inhibiteur de la pompe à protons, utilisé pour traiter reflux et ulcères gastriques.",
+        "reference": "Gélules 20 mg, boîte de 14",
+        "component": [
+            "Oméprazole"
+        ],
+        "tags": [
+            "estomac",
+            "reflux",
+            "ulcère"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "16": {
+        "name": "Métoclopramide",
+        "provider": "Sanofi",
+        "image": "data\\images\\Métoclopramide.webp",
+        "description": "Antinauséeux, agit contre les nausées et vomissements.",
+        "reference": "Comprimés 10 mg, boîte de 20",
+        "component": [
+            "Métoclopramide"
+        ],
+        "tags": [
+            "nausée",
+            "vomissement",
+            "gastro"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "17": {
+        "name": "Ondansétron",
+        "provider": "GlaxoSmithKline",
+        "image": "data\\images\\Ondansétron.webp",
+        "description": "Antinauséeux utilisé notamment lors de chimiothérapie ou post-opératoire.",
+        "reference": "Comprimés 4 mg, boîte de 10",
+        "component": [
+            "Ondansétron"
+        ],
+        "tags": [
+            "nausée",
+            "chimiothérapie",
+            "antinauséeux"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "18": {
+        "name": "Acide folique",
+        "provider": "Bayer",
+        "image": "data\\images\\Acide folique.webp",
+        "description": "Vitamine B9, utilisée en supplémentation, notamment chez la femme enceinte.",
+        "reference": "Comprimés 5 mg, boîte de 30",
+        "component": [
+            "Acide folique"
+        ],
+        "tags": [
+            "vitamine",
+            "grossesse",
+            "supplément"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "19": {
+        "name": "Albendazole",
+        "provider": "Zentiva",
+        "image": "data\\images\\Albendazole.webp",
+        "description": "Anthelminthique utilisé contre les infections parasitaires (lombrics...).",
+        "reference": "Comprimés 400 mg, boîte de 2",
+        "component": [
+            "Albendazole"
+        ],
+        "tags": [
+            "parasitaire",
+            "anthelminthique"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "20": {
+        "name": "Doxycycline",
+        "provider": "Pfizer",
+        "image": "data\\images\\Doxycycline.webp",
+        "description": "Antipaludique ou antibiotique (tétracycline), selon les usages.",
+        "reference": "Comprimés 100 mg, boîte de 20",
+        "component": [
+            "Doxycycline"
+        ],
+        "tags": [
+            "malaria",
+            "antibiotique",
+            "infection"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "23": {
+        "name": "Clotrimazole crème",
+        "provider": "Canesten (Bayer)",
+        "image": "data\\images\\Clotrimazole crème.webp",
+        "description": "Antifongique en crème pour les infections cutanées type mycose.",
+        "reference": "Tube 20 g",
+        "component": [
+            "Clotrimazole"
+        ],
+        "tags": [
+            "antifongique",
+            "mycose",
+            "peau"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "24": {
+        "name": "Fluconazole",
+        "provider": "Pfizer",
+        "image": "data\\images\\Fluconazole.webp",
+        "description": "Antifongique à large spectre utilisé notamment pour candidoses.",
+        "reference": "Comprimés 150 mg, boîte de 1",
+        "component": [
+            "Fluconazole"
+        ],
+        "tags": [
+            "antifongique",
+            "candidose",
+            "infection"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "25": {
+        "name": "Ivermectine",
+        "provider": "Merck",
+        "image": "data\\images\\Ivermectine.webp",
+        "description": "Antiparasitaire utilisé contre certaines infections parasitaires.",
+        "reference": "Comprimés 3 mg, boîte de 6",
+        "component": [
+            "Ivermectine"
+        ],
+        "tags": [
+            "parasitaire",
+            "antiparasitaire"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "27": {
+        "name": "Diazépam",
+        "provider": "Roche",
+        "image": "data\\images\\Diazépam.webp",
+        "description": "Benzodiazépine utilisée comme anxiolytique, anticonvulsivant, relaxant musculaire.",
+        "reference": "Comprimés 5 mg, boîte de 30",
+        "component": [
+            "Diazépam"
+        ],
+        "tags": [
+            "anxiété",
+            "convulsions",
+            "muscle"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "28": {
+        "name": "Lamotrigine",
+        "provider": "GlaxoSmithKline",
+        "image": "data\\images\\Lamotrigine.webp",
+        "description": "Anticonvulsivant utilisé notamment dans l'épilepsie.",
+        "reference": "Comprimés 100 mg, boîte de 28",
+        "component": [
+            "Lamotrigine"
+        ],
+        "tags": [
+            "épilepsie",
+            "anticonvulsivant"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "30": {
+        "name": "Sulfate de magnésium",
+        "provider": "Fresenius Kabi",
+        "image": "data\\images\\Sulfate_de_magnésium.webp",
+        "description": "Utilisé pour éclampsie ou convulsions dans le cadre de la pré-éclampsie.",
+        "reference": "Injectable 500 mg/ml, ampoule",
+        "component": [
+            "Sulfate de magnésium"
+        ],
+        "tags": [
+            "obstétrique",
+            "convulsions",
+            "pré-éclampsie"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "31": {
+        "name": "Adrénaline injectable",
+        "provider": "Sanofi",
+        "image": "data\\images\\Adrénaline injectable.webp",
+        "description": "Traitement d'urgence des réactions allergiques graves (choc anaphylactique).",
+        "reference": "Injectable 1 mg/ml, ampoule",
+        "component": [
+            "Adrénaline"
+        ],
+        "tags": [
+            "allergie",
+            "urgence",
+            "anaphylaxie"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "32": {
+        "name": "N-acétylcystéine",
+        "provider": "Bristol-Myers Squibb",
+        "image": "data\\images\\N-acétylcystéine.webp",
+        "description": "Antidote en cas d'intoxication au paracétamol, aussi mucolytique.",
+        "reference": "Injectable 200 mg/ml, ampoule de 10 ml",
+        "component": [
+            "N-acétylcystéine"
+        ],
+        "tags": [
+            "antidote",
+            "intoxication",
+            "mucolytique"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "33": {
+        "name": "Atropine injectable",
+        "provider": "Sanofi",
+        "image": "data\\images\\Atropine injectable.webp",
+        "description": "Utilisée dans les intoxications, bradycardies sévères.",
+        "reference": "Injectable 1 mg/ml, ampoule",
+        "component": [
+            "Atropine"
+        ],
+        "tags": [
+            "intoxication",
+            "cardiaque",
+            "urgence"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "35": {
+        "name": "Charbon activé",
+        "provider": "Divers génériques",
+        "image": "data\\images\\Charbon activé.webp",
+        "description": "Antidote non spécifique utilisé en cas d'ingestion de toxiques.",
+        "reference": "Poudre orale sachets",
+        "component": [
+            "Charbon activé"
+        ],
+        "tags": [
+            "antidote",
+            "intoxication",
+            "gastro"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "36": {
+        "name": "Clonazépam",
+        "provider": "Roche",
+        "image": "data\\images\\Clonazépam.webp",
+        "description": "Benzodiazépine utilisée comme anticonvulsivant ou anxiolytique.",
+        "reference": "Comprimés 0,5 mg, boîte de 30",
+        "component": [
+            "Clonazépam"
+        ],
+        "tags": [
+            "anxiété",
+            "épilepsie"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "37": {
+        "name": "Prednisolone",
+        "provider": "Sanofi",
+        "image": "data\\images\\Prednisolone.webp",
+        "description": "Corticostéroïde utilisé pour inflammations sévères, allergies.",
+        "reference": "Comprimés 20 mg, boîte de 30",
+        "component": [
+            "Prednisolone"
+        ],
+        "tags": [
+            "inflammation",
+            "allergie",
+            "corticoïde"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "38": {
+        "name": "Loratadine",
+        "provider": "Sanofi",
+        "image": "data\\images\\Loratadine.webp",
+        "description": "Antihistaminique pour traiter les allergies saisonnières.",
+        "reference": "Comprimés 10 mg, boîte de 20",
+        "component": [
+            "Loratadine"
+        ],
+        "tags": [
+            "allergie",
+            "antihistaminique"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "39": {
+        "name": "Prednisone",
+        "provider": "Pfizer",
+        "image": "data\\images\\Prednisone.webp",
+        "description": "Corticostéroïde indiquée dans les affections inflammatoires graves.",
+        "reference": "Comprimés 5 mg, boîte de 30",
+        "component": [
+            "Prednisone"
+        ],
+        "tags": [
+            "inflammation",
+            "corticoïde",
+            "auto-immune"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "41": {
+        "name": "Enoxaparine",
+        "provider": "Sanofi",
+        "image": "data\\images\\Enoxaparine.webp",
+        "description": "Anticoagulant injectable de type héparine de bas poids moléculaire.",
+        "reference": "Injectable 40 mg/0,4 ml, seringue pré-remplie",
+        "component": [
+            "Enoxaparine"
+        ],
+        "tags": [
+            "anticoagulant",
+            "prévention",
+            "thrombose"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "42": {
+        "name": "Digoxine",
+        "provider": "Sanofi",
+        "image": "data\\images\\Digoxine.webp",
+        "description": "Traitement pour certains troubles du rythme cardiaque.",
+        "reference": "Comprimés 250 µg, boîte de 30",
+        "component": [
+            "Digoxine"
+        ],
+        "tags": [
+            "cardiaque",
+            "arythmie"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "43": {
+        "name": "Bisoprolol",
+        "provider": "Merck",
+        "image": "data\\images\\Bisoprolol.webp",
+        "description": "Bêtabloquant utilisé pour hypertension et insuffisance cardiaque.",
+        "reference": "Comprimés 5 mg, boîte de 30",
+        "component": [
+            "Bisoprolol"
+        ],
+        "tags": [
+            "hypertension",
+            "cardiaque",
+            "bêtabloquant"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "44": {
+        "name": "Furosémide",
+        "provider": "Sanofi",
+        "image": "data\\images\\Furosémide.webp",
+        "description": "Diurétique de l'anse utilisé dans l'œdème ou l'insuffisance cardiaque.",
+        "reference": "Comprimés 40 mg, boîte de 30",
+        "component": [
+            "Furosémide"
+        ],
+        "tags": [
+            "diurétique",
+            "œdème",
+            "cardiaque"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "45": {
+        "name": "Spironolactone",
+        "provider": "Pfizer",
+        "image": "data\\images\\Spironolactone.webp",
+        "description": "Diurétique épargneur de potassium, utilisé dans l'insuffisance cardiaque.",
+        "reference": "Comprimés 25 mg, boîte de 30",
+        "component": [
+            "Spironolactone"
+        ],
+        "tags": [
+            "diurétique",
+            "cœur",
+            "hyperaldostéronisme"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "46": {
+        "name": "Hydrochlorothiazide",
+        "provider": "Sanofi",
+        "image": "data\\images\\Hydrochlorothiazide.webp",
+        "description": "Thiazidique utilisé dans le traitement de l'hypertension.",
+        "reference": "Comprimés 25 mg, boîte de 30",
+        "component": [
+            "Hydrochlorothiazide"
+        ],
+        "tags": [
+            "hypertension",
+            "diurétique"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "47": {
+        "name": "Losartan",
+        "provider": "Merck",
+        "image": "data\\images\\Losartan.webp",
+        "description": "Antagoniste des récepteurs de l'angiotensine II, pour hypertension.",
+        "reference": "Comprimés 50 mg, boîte de 30",
+        "component": [
+            "Losartan"
+        ],
+        "tags": [
+            "hypertension",
+            "antihypertenseur"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "48": {
+        "name": "Propranolol",
+        "provider": "AstraZeneca",
+        "image": "data\\images\\Propranolol.webp",
+        "description": "Bêtabloquant utilisé dans la prévention des migraines, hypertension.",
+        "reference": "Comprimés 40 mg, boîte de 30",
+        "component": [
+            "Propranolol"
+        ],
+        "tags": [
+            "migraine",
+            "hypertension",
+            "bêtabloquant"
+        ],
+        "category": "medicine",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": true
+    },
+    "49": {
+        "name": "Biafine",
+        "provider": "Johnson & Johnson",
+        "image": "data\\images\\Biafine.webp",
+        "description": "Crème émolliente apaisante pour les brûlures légères et irritations cutanées.",
+        "reference": "Tube de 93 g",
+        "component": [
+            "Trolamine"
+        ],
+        "tags": [
+            "brûlure",
+            "irritation",
+            "hydratation"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "50": {
+        "name": "Eau Thermale Avène",
+        "provider": "Avène",
+        "image": "data\\images\\Eau_Thermale_Avene.webp",
+        "description": "Spray d'eau thermale apaisante pour peaux sensibles et irritées.",
+        "reference": "Spray 300 ml",
+        "component": [
+            "Eau thermale d'Avène"
+        ],
+        "tags": [
+            "peau sensible",
+            "hydratation",
+            "apaisant"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "51": {
+        "name": "Cicaplast Baume B5",
+        "provider": "La Roche-Posay",
+        "image": "data\\images\\Cicaplast_Baume_B5.webp",
+        "description": "Baume réparateur apaisant pour les irritations et rougeurs cutanées.",
+        "reference": "Tube 40 ml",
+        "component": [
+            "Panthénol",
+            "Madecassoside"
+        ],
+        "tags": [
+            "réparation",
+            "peau irritée",
+            "apaisant"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "52": {
+        "name": "Bepanthen Crème",
+        "provider": "Bayer",
+        "image": "data\\images\\Bepanthen_Creme.webp",
+        "description": "Crème hydratante et réparatrice pour les peaux sèches et irritées.",
+        "reference": "Tube 100 g",
+        "component": [
+            "Dexpanthénol"
+        ],
+        "tags": [
+            "irritation",
+            "hydratation",
+            "réparation"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "53": {
+        "name": "Cicalfate Crème",
+        "provider": "Avène",
+        "image": "data\\images\\Cicalfate_Creme.webp",
+        "description": "Crème réparatrice antibactérienne pour peaux fragilisées.",
+        "reference": "Tube 40 ml",
+        "component": [
+            "Sulfate de cuivre",
+            "Zinc",
+            "Eau thermale"
+        ],
+        "tags": [
+            "réparation",
+            "peau irritée",
+            "apaisant"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "54": {
+        "name": "Mustela Gel Lavant Doux",
+        "provider": "Mustela",
+        "image": "data\\images\\Mustela_Gel_Lavant_Doux.webp",
+        "description": "Gel lavant doux pour le corps et les cheveux des bébés et enfants.",
+        "reference": "Flacon pompe 500 ml",
+        "component": [
+            "Avocat perseose",
+            "Glycérine"
+        ],
+        "tags": [
+            "bébé",
+            "toilette",
+            "doux"
+        ],
+        "category": "parapharmacy",
+        "age_group": "children",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "55": {
+        "name": "Bioderma Atoderm Crème",
+        "provider": "Bioderma",
+        "image": "data\\images\\Bioderma_Atoderm_Creme.webp",
+        "description": "Crème ultra-nourrissante pour peaux sèches à très sèches.",
+        "reference": "Tube 200 ml",
+        "component": [
+            "Beurre de karité",
+            "Glycérine"
+        ],
+        "tags": [
+            "hydratation",
+            "peau sèche",
+            "nutrition"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "56": {
+        "name": "Ducray Kelual DS Shampooing",
+        "provider": "Ducray",
+        "image": "data\\images\\Ducray_Kelual_DS.webp",
+        "description": "Shampooing traitant les pellicules grasses et les démangeaisons du cuir chevelu.",
+        "reference": "Flacon 100 ml",
+        "component": [
+            "Ciclopirox olamine",
+            "Kélual"
+        ],
+        "tags": [
+            "pellicules",
+            "cuir chevelu",
+            "apaisant"
+        ],
+        "category": "parapharmacy",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "57": {
+        "name": "Avène Cold Cream",
+        "provider": "Avène",
+        "image": "data\\images\\Avene_Cold_Cream.webp",
+        "description": "Crème nourrissante pour peaux sèches et très sèches.",
+        "reference": "Tube 40 ml",
+        "component": [
+            "Cire d'abeille",
+            "Eau thermale"
+        ],
+        "tags": [
+            "peau sèche",
+            "nutrition",
+            "hydratation"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "58": {
+        "name": "Klorane Shampooing Sec",
+        "provider": "Klorane",
+        "image": "data\\images\\Klorane_Shampooing_Sec.webp",
+        "description": "Shampooing sec à l'avoine qui nettoie sans eau et redonne volume et fraîcheur.",
+        "reference": "Spray 150 ml",
+        "component": [
+            "Avoine",
+            "Amidon de riz"
+        ],
+        "tags": [
+            "shampooing",
+            "cheveux",
+            "sans eau"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "59": {
+        "name": "Sensodyne Dentifrice Répare & Protège",
+        "provider": "GSK",
+        "image": "data\\images\\Sensodyne_Repare_Protege.webp",
+        "description": "Dentifrice pour dents sensibles qui aide à réparer les zones fragilisées.",
+        "reference": "Tube 75 ml",
+        "component": [
+            "Nitrate de potassium",
+            "Fluorure de sodium"
+        ],
+        "tags": [
+            "dents sensibles",
+            "hygiène",
+            "protection"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "60": {
+        "name": "Rogé Cavaillès Gel Surgras",
+        "provider": "Rogé Cavaillès",
+        "image": "data\\images\\Roge_Cavailles_Gel_Surgras.webp",
+        "description": "Gel lavant nourrissant pour peaux sèches et sensibles.",
+        "reference": "Flacon pompe 500 ml",
+        "component": [
+            "Huile d'amande douce",
+            "Glycérine"
+        ],
+        "tags": [
+            "peau sèche",
+            "toilette",
+            "hydratation"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "61": {
+        "name": "Uriage Eau Thermale Spray",
+        "provider": "Uriage",
+        "image": "data\\images\\Uriage_Eau_Thermale.webp",
+        "description": "Eau thermale hydratante et apaisante pour toutes les peaux.",
+        "reference": "Spray 150 ml",
+        "component": [
+            "Eau thermale d'Uriage"
+        ],
+        "tags": [
+            "hydratation",
+            "peau sensible",
+            "apaisant"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "62": {
+        "name": "Topicrem Ultra Hydratant",
+        "provider": "Topicrem",
+        "image": "data\\images\\Topicrem_Ultra_Hydratant.webp",
+        "description": "Lait corps hydratant pour peaux sensibles et sèches.",
+        "reference": "Flacon pompe 500 ml",
+        "component": [
+            "Glycérine",
+            "Uréa"
+        ],
+        "tags": [
+            "hydratation",
+            "peau sèche",
+            "sensible"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "63": {
+        "name": "Avène Cleanance Gel",
+        "provider": "Avène",
+        "image": "data\\images\\Avene_Cleanance_Gel.webp",
+        "description": "Gel nettoyant purifiant pour peaux grasses et à tendance acnéique.",
+        "reference": "Flacon pompe 200 ml",
+        "component": [
+            "Eau thermale",
+            "Monolaurine"
+        ],
+        "tags": [
+            "acné",
+            "nettoyant",
+            "purifiant"
+        ],
+        "category": "parapharmacy",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "64": {
+        "name": "Vichy Déodorant 48h",
+        "provider": "Vichy",
+        "image": "data\\images\\Vichy_Deodorant_48h.webp",
+        "description": "Déodorant anti-transpirant 48h pour peaux sensibles.",
+        "reference": "Roll-on 50 ml",
+        "component": [
+            "Perlite",
+            "Allantoïne"
+        ],
+        "tags": [
+            "déodorant",
+            "anti-transpirant",
+            "peau sensible"
+        ],
+        "category": "parapharmacy",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "65": {
+        "name": "Phyto 7 Crème de Jour",
+        "provider": "Phyto",
+        "image": "data\\images\\Phyto_7.webp",
+        "description": "Crème de jour capillaire hydratante aux 7 plantes pour cheveux secs.",
+        "reference": "Tube 50 ml",
+        "component": [
+            "Romarin",
+            "Saule",
+            "Soja"
+        ],
+        "tags": [
+            "cheveux secs",
+            "hydratation",
+            "soin capillaire"
+        ],
+        "category": "parapharmacy",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "66": {
+        "name": "La Roche-Posay Lipikar Baume AP+M",
+        "provider": "La Roche-Posay",
+        "image": "data\\images\\Lipikar_Baume_APM.webp",
+        "description": "Baume relipidant anti-grattage pour peaux très sèches ou atopiques.",
+        "reference": "Flacon pompe 400 ml",
+        "component": [
+            "Beurre de karité",
+            "Aqua Posae Filiformis"
+        ],
+        "tags": [
+            "eczéma",
+            "peau sèche",
+            "hydratation"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "67": {
+        "name": "Weleda Crème Mains à la Grenade",
+        "provider": "Weleda",
+        "image": "data\\images\\Weleda_Creme_Mains_Grenade.webp",
+        "description": "Crème régénératrice pour les mains à base d'huile de grenade bio.",
+        "reference": "Tube 50 ml",
+        "component": [
+            "Huile de grenade",
+            "Beurre de karité"
+        ],
+        "tags": [
+            "mains",
+            "nourrissant",
+            "anti-âge"
+        ],
+        "category": "parapharmacy",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "68": {
+        "name": "Eucerin Aquaphor",
+        "provider": "Eucerin",
+        "image": "data\\images\\Eucerin_Aquaphor.webp",
+        "description": "Baume réparateur pour peaux très sèches, gercées ou irritées.",
+        "reference": "Tube 40 g",
+        "component": [
+            "Panthénol",
+            "Glycérine"
+        ],
+        "tags": [
+            "réparation",
+            "hydratation",
+            "barrière cutanée"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "69": {
+        "name": "Bioderma Sébium Gel Moussant",
+        "provider": "Bioderma",
+        "image": "data\\images\\Bioderma_Sebium_Gel.webp",
+        "description": "Gel nettoyant purifiant pour peaux mixtes à grasses.",
+        "reference": "Flacon pompe 200 ml",
+        "component": [
+            "Zinc",
+            "Coco-glucoside"
+        ],
+        "tags": [
+            "acné",
+            "purifiant",
+            "nettoyant"
+        ],
+        "category": "parapharmacy",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "70": {
+        "name": "Uriage Bariéderm Cica-Crème",
+        "provider": "Uriage",
+        "image": "data\\images\\Uriage_Bariederm_Cica.webp",
+        "description": "Crème isolante et réparatrice pour peaux irritées et fragilisées.",
+        "reference": "Tube 40 ml",
+        "component": [
+            "Cuivre",
+            "Zinc",
+            "Eau thermale d'Uriage"
+        ],
+        "tags": [
+            "réparation",
+            "irritation",
+            "protection"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "71": {
+        "name": "Nuxe Huile Prodigieuse",
+        "provider": "Nuxe",
+        "image": "data\\images\\Nuxe_Huile_Prodigieuse.webp",
+        "description": "Huile sèche multifonction pour le visage, le corps et les cheveux.",
+        "reference": "Flacon vaporisateur 100 ml",
+        "component": [
+            "Huile d'amande douce",
+            "Vitamine E"
+        ],
+        "tags": [
+            "hydratation",
+            "soin",
+            "cheveux"
+        ],
+        "category": "parapharmacy",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "72": {
+        "name": "Avène XeraCalm A.D Crème",
+        "provider": "Avène",
+        "image": "data\\images\\Avene_XeraCalm_AD.webp",
+        "description": "Crème relipidante anti-grattage pour peaux très sèches à tendance atopique.",
+        "reference": "Tube 200 ml",
+        "component": [
+            "I-modulia",
+            "Eau thermale d'Avène"
+        ],
+        "tags": [
+            "eczéma",
+            "anti-démangeaisons",
+            "hydratation"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "73": {
+        "name": "Caudalie Eau de Beauté",
+        "provider": "Caudalie",
+        "image": "data\\images\\Caudalie_Eau_de_Beaute.webp",
+        "description": "Brume tonique pour lisser et illuminer le teint.",
+        "reference": "Spray 100 ml",
+        "component": [
+            "Raisin",
+            "Rose",
+            "Romarin"
+        ],
+        "tags": [
+            "teint",
+            "hydratation",
+            "éclat"
+        ],
+        "category": "wellness",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "74": {
+        "name": "René Furterer Karité Nutri Masque",
+        "provider": "René Furterer",
+        "image": "data\\images\\Rene_Furterer_Karite.webp",
+        "description": "Masque nourrissant intense pour cheveux très secs.",
+        "reference": "Pot 200 ml",
+        "component": [
+            "Beurre de karité",
+            "Cimentrio"
+        ],
+        "tags": [
+            "cheveux secs",
+            "nutrition",
+            "réparation"
+        ],
+        "category": "parapharmacy",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "75": {
+        "name": "Aderma Exomega Control Lait",
+        "provider": "Aderma",
+        "image": "data\\images\\Aderma_Exomega_Control.webp",
+        "description": "Lait émollient anti-grattage pour peaux atopiques.",
+        "reference": "Flacon pompe 400 ml",
+        "component": [
+            "Extrait d'avoine Rhealba",
+            "Filaxérine"
+        ],
+        "tags": [
+            "eczéma",
+            "hydratation",
+            "bébé"
+        ],
+        "category": "parapharmacy",
+        "age_group": "children",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "76": {
+        "name": "Elmex Enfant Dentifrice",
+        "provider": "Elmex",
+        "image": "data\\images\\Elmex_Enfant.webp",
+        "description": "Dentifrice pour enfants, protège les dents de lait contre les caries.",
+        "reference": "Tube 50 ml",
+        "component": [
+            "Fluorure d'amines",
+            "Silice"
+        ],
+        "tags": [
+            "enfant",
+            "caries",
+            "hygiène dentaire"
+        ],
+        "category": "parapharmacy",
+        "age_group": "children",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "77": {
+        "name": "Saforelle Soin Lavant Doux",
+        "provider": "Saforelle",
+        "image": "data\\images\\Saforelle_Soin_Lavant.webp",
+        "description": "Soin intime doux à base d'extrait de bardane pour la toilette quotidienne.",
+        "reference": "Flacon 250 ml",
+        "component": [
+            "Extrait de bardane",
+            "Glycérine"
+        ],
+        "tags": [
+            "hygiène intime",
+            "douceur",
+            "apaisant"
+        ],
+        "category": "parapharmacy",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "78": {
+        "name": "Puressentiel Spray Assainissant",
+        "provider": "Puressentiel",
+        "image": "data\\images\\Puressentiel_Spray.webp",
+        "description": "Spray purifiant à base d'huiles essentielles pour assainir l'air ambiant.",
+        "reference": "Spray 75 ml",
+        "component": [
+            "Ravintsara",
+            "Eucalyptus",
+            "Citron"
+        ],
+        "tags": [
+            "huiles essentielles",
+            "purifiant",
+            "air sain"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "79": {
+        "name": "Homéoplasmine",
+        "provider": "Boiron",
+        "image": "data\\images\\Homeoplasmine.webp",
+        "description": "Pommade apaisante pour irritations, gerçures et rougeurs cutanées.",
+        "reference": "Tube 40 g",
+        "component": [
+            "Calendula",
+            "Benzoin",
+            "Borate de sodium"
+        ],
+        "tags": [
+            "irritation",
+            "peau sèche",
+            "apaisant"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "83": {
+        "name": "La Roche-Posay Effaclar Duo+",
+        "provider": "La Roche-Posay",
+        "image": "data\\images\\Effaclar_Duo.webp",
+        "description": "Soin correcteur anti-imperfections et anti-marques.",
+        "reference": "Tube 40 ml",
+        "component": [
+            "Niacinamide",
+            "Procerad"
+        ],
+        "tags": [
+            "acné",
+            "soin visage",
+            "imperfections"
+        ],
+        "category": "parapharmacy",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "84": {
+        "name": "Boiron Arnigel",
+        "provider": "Boiron",
+        "image": "data\\images\\Boiron_Arnigel.webp",
+        "description": "Gel à base d'Arnica pour soulager les coups et les bleus.",
+        "reference": "Tube 45 g",
+        "component": [
+            "Arnica montana"
+        ],
+        "tags": [
+            "ecchymoses",
+            "contusions",
+            "soulagement"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "85": {
+        "name": "Hydralin Quotidien",
+        "provider": "Hydralin",
+        "image": "data\\images\\Hydralin_Quotidien.webp",
+        "description": "Soin lavant intime quotidien, respecte la flore vaginale.",
+        "reference": "Flacon 200 ml",
+        "component": [
+            "Extrait de lotus",
+            "Acide lactique"
+        ],
+        "tags": [
+            "hygiène intime",
+            "équilibre",
+            "douceur"
+        ],
+        "category": "parapharmacy",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "86": {
+        "name": "Phyto Phytopolleine Élixir",
+        "provider": "Phyto",
+        "image": "data\\images\\Phyto_PhytoPolleine.webp",
+        "description": "Élixir stimulant pour cuir chevelu fatigué et cheveux ternes.",
+        "reference": "Flacon 25 ml",
+        "component": [
+            "Romarin",
+            "Citron",
+            "Cèdre"
+        ],
+        "tags": [
+            "cheveux",
+            "vitalité",
+            "cuir chevelu"
+        ],
+        "category": "parapharmacy",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "88": {
+        "name": "Mercurochrome Pansements Résistants à l'Eau",
+        "provider": "Mercurochrome",
+        "image": "data\\images\\Mercurochrome_Pansements.webp",
+        "description": "Pansements adhésifs résistants à l'eau, protection des petites plaies.",
+        "reference": "Boîte de 20 pansements",
+        "component": [
+            "Support plastique",
+            "Adhésif hypoallergénique"
+        ],
+        "tags": [
+            "pansement",
+            "plaie",
+            "protection"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "89": {
+        "name": "Ducray Kertyol PSO Shampooing",
+        "provider": "Ducray",
+        "image": "data\\images\\Ducray_Kertyol_PSO.webp",
+        "description": "Shampooing traitant les états squameux du cuir chevelu, apaise les démangeaisons.",
+        "reference": "Flacon 200 ml",
+        "component": [
+            "Ichtyol",
+            "Acide salicylique"
+        ],
+        "tags": [
+            "pellicules",
+            "cuir chevelu",
+            "antipelliculaire"
+        ],
+        "category": "parapharmacy",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "91": {
+        "name": "La Roche-Posay Anthelios SPF 50+",
+        "provider": "La Roche-Posay",
+        "image": "data\\images\\Anthelios_SPF50.webp",
+        "description": "Crème solaire haute protection SPF 50+ adaptée aux peaux sensibles.",
+        "reference": "Tube 50 ml",
+        "component": [
+            "Mexoryl XL",
+            "Eau thermale de La Roche-Posay"
+        ],
+        "tags": [
+            "solaire",
+            "SPF50",
+            "protection UV"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "92": {
+        "name": "Roger & Gallet Eau Fraîche Fleur de Figuier",
+        "provider": "Roger & Gallet",
+        "image": "data\\images\\RogerGallet_Fleur_de_Figuier.webp",
+        "description": "Eau parfumée relaxante aux notes fruitées de figue et de cèdre.",
+        "reference": "Vaporisateur 100 ml",
+        "component": [
+            "Figue",
+            "Cèdre",
+            "Mandarine"
+        ],
+        "tags": [
+            "parfum",
+            "relaxant",
+            "fruité"
+        ],
+        "category": "wellness",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "95": {
+        "name": "Weleda Huile de Massage à l'Arnica",
+        "provider": "Weleda",
+        "image": "data\\images\\Weleda_Huile_Arnica.webp",
+        "description": "Huile de massage chauffante pour la préparation et la récupération musculaire.",
+        "reference": "Flacon 100 ml",
+        "component": [
+            "Arnica",
+            "Tournesol",
+            "Romarin"
+        ],
+        "tags": [
+            "massage",
+            "sport",
+            "récupération"
+        ],
+        "category": "wellness",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "96": {
+        "name": "Caudalie Crème Gourmande Mains et Ongles",
+        "provider": "Caudalie",
+        "image": "data\\images\\Caudalie_Creme_Mains.webp",
+        "description": "Crème nourrissante et antioxydante pour les mains et les ongles.",
+        "reference": "Tube 75 ml",
+        "component": [
+            "Polyphénols de raisin",
+            "Beurre de karité"
+        ],
+        "tags": [
+            "mains",
+            "nourrissant",
+            "antioxydant"
+        ],
+        "category": "parapharmacy",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "97": {
+        "name": "Ducray Ictyane Crème Hydratante",
+        "provider": "Ducray",
+        "image": "data\\images\\Ducray_Ictyane.webp",
+        "description": "Crème émolliente pour peaux sèches à très sèches, nourrit et protège durablement.",
+        "reference": "Tube 50 ml",
+        "component": [
+            "Glycérine",
+            "Hydroxydecine"
+        ],
+        "tags": [
+            "hydratation",
+            "peau sèche",
+            "protection"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "98": {
+        "name": "Neutrogena Crème Mains Concentrée",
+        "provider": "Neutrogena",
+        "image": "data\\images\\Neutrogena_Creme_Mains.webp",
+        "description": "Crème ultra-réparatrice pour mains sèches et abîmées.",
+        "reference": "Tube 50 ml",
+        "component": [
+            "Glycérine",
+            "Diméthicone"
+        ],
+        "tags": [
+            "mains",
+            "hydratation",
+            "réparation"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "99": {
+        "name": "CeraVe Crème Hydratante",
+        "provider": "CeraVe",
+        "image": "data\\images\\Cerave_Creme_Hydratante.webp",
+        "description": "Crème hydratante visage et corps enrichie en céramides et acide hyaluronique.",
+        "reference": "Pot 340 g",
+        "component": [
+            "Céramides",
+            "Acide hyaluronique"
+        ],
+        "tags": [
+            "hydratation",
+            "barrière cutanée",
+            "nourrissant"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "100": {
+        "name": "Melvita Eau Florale de Rose",
+        "provider": "Melvita",
+        "image": "data\\images\\Melvita_Eau_de_Rose.webp",
+        "description": "Eau florale bio tonifiante et rafraîchissante à la rose ancienne.",
+        "reference": "Spray 200 ml",
+        "component": [
+            "Rosa Damascena",
+            "Eau de source"
+        ],
+        "tags": [
+            "tonique",
+            "hydratation",
+            "bio"
+        ],
+        "category": "parapharmacy",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "101": {
+        "name": "SVR Cicavit+ Crème",
+        "provider": "SVR",
+        "image": "data\\images\\SVR_Cicavit.webp",
+        "description": "Crème réparatrice apaisante pour irritations, rougeurs et cicatrices.",
+        "reference": "Tube 40 ml",
+        "component": [
+            "Madecassoside",
+            "Sucres prébiotiques"
+        ],
+        "tags": [
+            "cicatrice",
+            "réparation",
+            "apaisant"
+        ],
+        "category": "parapharmacy",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "102": {
+        "name": "Somatoline Cosmetic Nuit 7",
+        "provider": "Somatoline",
+        "image": "data\\images\\Somatoline_Nuit_7.webp",
+        "description": "Traitement intensif nuit amincissant à effet visible en 7 nuits.",
+        "reference": "Pot 400 ml",
+        "component": [
+            "Extrait de caféine",
+            "Argile blanche"
+        ],
+        "tags": [
+            "amincissant",
+            "nuit",
+            "soin corps"
+        ],
+        "category": "wellness",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "103": {
+        "name": "Biotherm Lait Corporel Anti-Dessèchement",
+        "provider": "Biotherm",
+        "image": "data\\images\\Biotherm_Lait_Corporel.webp",
+        "description": "Lait hydratant quotidien pour le corps, restaure la souplesse et la douceur de la peau.",
+        "reference": "Flacon 400 ml",
+        "component": [
+            "Vitamine E",
+            "Extrait d'agrumes"
+        ],
+        "tags": [
+            "hydratation",
+            "soin corps",
+            "bien-être"
+        ],
+        "category": "wellness",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "104": {
+        "name": "Rituals The Ritual of Sakura Body Cream",
+        "provider": "Rituals",
+        "image": "data\\images\\Rituals_Sakura_Cream.webp",
+        "description": "Crème riche inspirée des traditions japonaises, alliant lait de riz et fleur de cerisier pour une peau satinée.",
+        "reference": "Pot 220 ml",
+        "component": [
+            "Lait de riz",
+            "Fleur de cerisier"
+        ],
+        "tags": [
+            "apaisant",
+            "hydratant",
+            "relaxation"
+        ],
+        "category": "wellness",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "106": {
+        "name": "Melvita Huile Extraordinaire L'Or Bio",
+        "provider": "Melvita",
+        "image": "data\\images\\Melvita_LOr_Bio.webp",
+        "description": "Huile sèche multi-usages pour corps, visage et cheveux. Nourrit intensément sans effet gras.",
+        "reference": "Flacon 100 ml",
+        "component": [
+            "Huile d'argan",
+            "Huile de buriti",
+            "Huile d'inca inchi"
+        ],
+        "tags": [
+            "huile sèche",
+            "nourrissant",
+            "multi-usage"
+        ],
+        "category": "wellness",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "107": {
+        "name": "Caudalie Thé des Vignes Eau Fraîche",
+        "provider": "Caudalie",
+        "image": "data\\images\\Caudalie_The_des_Vignes.webp",
+        "description": "Eau fraîche légère et sensuelle aux notes de musc blanc, néroli et gingembre.",
+        "reference": "Flacon 50 ml",
+        "component": [
+            "Musc blanc",
+            "Néroli",
+            "Gingembre"
+        ],
+        "tags": [
+            "parfum",
+            "fraîcheur",
+            "bien-être"
+        ],
+        "category": "wellness",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "108": {
+        "name": "Frontline Combo Spot-On Chien M",
+        "provider": "Frontline",
+        "image": "data\\images\\Frontline_Combo_Chiens_M.webp",
+        "description": "Traitement antiparasitaire pour chiens de taille moyenne contre les puces, tiques et poux.",
+        "reference": "Pipettes x3 (10-20 kg)",
+        "component": [
+            "Fipronil",
+            "S-méthoprène"
+        ],
+        "tags": [
+            "antiparasitaire",
+            "chien",
+            "puces",
+            "tiques"
+        ],
+        "category": "veterinary",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "109": {
+        "name": "Advantage Chat",
+        "provider": "Bayer",
+        "image": "data\\images\\Advantage_Chat.webp",
+        "description": "Solution antipuce rapide et efficace pour chats adultes et chatons de plus de 8 semaines.",
+        "reference": "Pipettes x4 (jusqu'à 4 kg)",
+        "component": [
+            "Imidaclopride"
+        ],
+        "tags": [
+            "antipuce",
+            "chat",
+            "soin animal"
+        ],
+        "category": "veterinary",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "110": {
+        "name": "Drontal Comprimés Chien",
+        "provider": "Bayer",
+        "image": "data\\images\\Drontal_Chiens.webp",
+        "description": "Vermifuge complet pour chiens, élimine les vers ronds et plats en une seule prise.",
+        "reference": "Boîte de 4 comprimés",
+        "component": [
+            "Praziquantel",
+            "Pyrantel",
+            "Febantel"
+        ],
+        "tags": [
+            "vermifuge",
+            "chien",
+            "parasites internes"
+        ],
+        "category": "veterinary",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "111": {
+        "name": "Seresto Collier Antiparasitaire Chat",
+        "provider": "Bayer",
+        "image": "data\\images\\Seresto_Chat.webp",
+        "description": "Collier antiparasitaire à longue durée contre les puces et tiques jusqu'à 8 mois.",
+        "reference": "Collier 38 cm",
+        "component": [
+            "Imidaclopride",
+            "Fluméthrine"
+        ],
+        "tags": [
+            "antiparasitaire",
+            "chat",
+            "collier"
+        ],
+        "category": "veterinary",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "112": {
+        "name": "Clément Thékan Shampoing Antiparasitaire Chien",
+        "provider": "Clément Thékan",
+        "image": "data\\images\\Clement_Thekan_Shampooing.webp",
+        "description": "Shampoing doux pour chiens, aide à éliminer les puces et à apaiser la peau.",
+        "reference": "Flacon 200 ml",
+        "component": [
+            "Perméthrine",
+            "Extrait d'aloe vera"
+        ],
+        "tags": [
+            "shampoing",
+            "chien",
+            "antipuce"
+        ],
+        "category": "veterinary",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "113": {
+        "name": "Beaphar Pâte Vitaminée Chat",
+        "provider": "Beaphar",
+        "image": "data\\images\\Beaphar_Pate_Vitaminee_Chat.webp",
+        "description": "Pâte nutritive double action : soutien immunitaire et beauté du pelage.",
+        "reference": "Tube 100 g",
+        "component": [
+            "Vitamines B",
+            "Taurine",
+            "Biotine"
+        ],
+        "tags": [
+            "complément",
+            "chat",
+            "pelage",
+            "vitalité"
+        ],
+        "category": "veterinary",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "114": {
+        "name": "Virbac Epi-Otic Nettoyant Auriculaire",
+        "provider": "Virbac",
+        "image": "data\\images\\Virbac_Epi_Otic.webp",
+        "description": "Solution nettoyante pour les oreilles des chiens et chats, aide à prévenir les otites.",
+        "reference": "Flacon 125 ml",
+        "component": [
+            "Acide salicylique",
+            "Monosaccharides"
+        ],
+        "tags": [
+            "hygiène",
+            "oreilles",
+            "chien",
+            "chat"
+        ],
+        "category": "veterinary",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "115": {
+        "name": "Hill's Science Plan Croquettes Chien Adulte Poulet",
+        "provider": "Hill's",
+        "image": "data\\images\\Hills_Science_Adulte_Poulet.webp",
+        "description": "Croquettes complètes pour chiens adultes, favorisent une digestion saine et des muscles forts.",
+        "reference": "Sac 2,5 kg",
+        "component": [
+            "Poulet",
+            "Riz",
+            "Fibres naturelles"
+        ],
+        "tags": [
+            "nutrition",
+            "chien",
+            "croquettes"
+        ],
+        "category": "veterinary",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "116": {
+        "name": "Royal Canin Veterinary Diet Chat Renal",
+        "provider": "Royal Canin",
+        "image": "data\\images\\Royal_Canin_Renal_Chat.webp",
+        "description": "Aliment diététique pour chats souffrant d'insuffisance rénale chronique.",
+        "reference": "Sac 2 kg",
+        "component": [
+            "Protéines hautement digestibles",
+            "Acides gras oméga-3"
+        ],
+        "tags": [
+            "diététique",
+            "chat",
+            "reins",
+            "alimentation"
+        ],
+        "category": "veterinary",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "117": {
+        "name": "Anxivet Complément Apaisant Chien & Chat",
+        "provider": "TVM",
+        "image": "data\\images\\Anxivet_Complement.webp",
+        "description": "Complément alimentaire apaisant pour aider les animaux à gérer le stress et l'anxiété.",
+        "reference": "Boîte de 30 comprimés",
+        "component": [
+            "L-tryptophane",
+            "Magnésium",
+            "Vitamine B6"
+        ],
+        "tags": [
+            "stress",
+            "chien",
+            "chat",
+            "calmant"
+        ],
+        "category": "veterinary",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "118": {
+        "name": "Fortimel Energy Drink Vanille",
+        "provider": "Nutricia",
+        "image": "data\\images\\Fortimel_Energy_Vanille.webp",
+        "description": "Boisson hypercalorique et hyperprotéinée pour le soutien nutritionnel des personnes affaiblies.",
+        "reference": "Pack de 4 x 200 ml",
+        "component": [
+            "Protéines de lait",
+            "Vitamines B",
+            "Calcium"
+        ],
+        "tags": [
+            "complément",
+            "énergie",
+            "nutrition clinique"
+        ],
+        "category": "nutrition",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "119": {
+        "name": "Bion 3 Défense",
+        "provider": "Merck",
+        "image": "data\\images\\Bion3_Defense.webp",
+        "description": "Complément alimentaire pour renforcer les défenses immunitaires et la vitalité.",
+        "reference": "Boîte de 30 comprimés",
+        "component": [
+            "Vitamines B6 et D",
+            "Fer",
+            "Probiotiques"
+        ],
+        "tags": [
+            "immunité",
+            "vitalité",
+            "complément"
+        ],
+        "category": "nutrition",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "120": {
+        "name": "Berocca Énergie",
+        "provider": "Bayer",
+        "image": "data\\images\\Berocca_Energie.webp",
+        "description": "Complément vitaminé pour soutenir la concentration et réduire la fatigue mentale et physique.",
+        "reference": "Tube de 30 comprimés effervescents",
+        "component": [
+            "Vitamine C",
+            "Magnésium",
+            "Zinc"
+        ],
+        "tags": [
+            "fatigue",
+            "énergie",
+            "vitamines"
+        ],
+        "category": "nutrition",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "121": {
+        "name": "Juvamine Magnésium & Vitamine B6",
+        "provider": "Juvamine",
+        "image": "data\\images\\Juvamine_Magnesium_B6.webp",
+        "description": "Aide à réduire la fatigue et contribue au bon fonctionnement du système nerveux.",
+        "reference": "Boîte de 30 comprimés",
+        "component": [
+            "Magnésium",
+            "Vitamine B6"
+        ],
+        "tags": [
+            "fatigue",
+            "nervosité",
+            "complément"
+        ],
+        "category": "nutrition",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "122": {
+        "name": "Modulen IBD",
+        "provider": "Nestlé Health Science",
+        "image": "data\\images\\Modulen_IBD.webp",
+        "description": "Aliment diététique pour la prise en charge nutritionnelle des maladies inflammatoires intestinales.",
+        "reference": "Boîte 400 g",
+        "component": [
+            "Protéines de lait",
+            "Acides gras MCT",
+            "Vitamines"
+        ],
+        "tags": [
+            "nutrition médicale",
+            "intestin",
+            "diététique"
+        ],
+        "category": "nutrition",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "123": {
+        "name": "Nutergia Ergyphilus Confort",
+        "provider": "Nutergia",
+        "image": "data\\images\\Ergyphilus_Confort.webp",
+        "description": "Complément probiotique pour l'équilibre intestinal et le confort digestif.",
+        "reference": "Boîte de 60 gélules",
+        "component": [
+            "Lactobacillus acidophilus",
+            "Bifidobacterium lactis"
+        ],
+        "tags": [
+            "probiotiques",
+            "digestion",
+            "microbiote"
+        ],
+        "category": "nutrition",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "124": {
+        "name": "Babybio Céréales Riz Vanille",
+        "provider": "Babybio",
+        "image": "data\\images\\Babybio_Cereales_Riz_Vanille.webp",
+        "description": "Céréales infantiles bio sans gluten à la vanille, adaptées dès 6 mois.",
+        "reference": "Boîte 220 g",
+        "component": [
+            "Riz",
+            "Vanille",
+            "Vitamine B1"
+        ],
+        "tags": [
+            "bébé",
+            "bio",
+            "alimentation"
+        ],
+        "category": "nutrition",
+        "age_group": "children",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "125": {
+        "name": "Ensure Plus Boisson Chocolat",
+        "provider": "Abbott",
+        "image": "data\\images\\Ensure_Plus_Chocolat.webp",
+        "description": "Boisson hyperprotéinée pour la récupération et le maintien du poids chez les personnes âgées.",
+        "reference": "Pack de 4 x 220 ml",
+        "component": [
+            "Protéines de lait",
+            "Vitamines",
+            "Calcium"
+        ],
+        "tags": [
+            "soutien nutritionnel",
+            "protéines",
+            "énergie"
+        ],
+        "category": "nutrition",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "126": {
+        "name": "Gerblé Sans Sucres Ajoutés Biscuit Céréales",
+        "provider": "Gerblé",
+        "image": "data\\images\\Gerble_Sans_Sucre_Biscuits.webp",
+        "description": "Biscuits diététiques riches en fibres, sans sucres ajoutés, pour une pause saine.",
+        "reference": "Boîte 200 g",
+        "component": [
+            "Blé complet",
+            "Fibres",
+            "Édulcorant"
+        ],
+        "tags": [
+            "diététique",
+            "snack",
+            "sans sucre"
+        ],
+        "category": "nutrition",
+        "age_group": "adult",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    },
+    "127": {
+        "name": "Arkopharma Spiruline Bio",
+        "provider": "Arkopharma",
+        "image": "data\\images\\Arkopharma_Spiruline_Bio.webp",
+        "description": "Complément naturel à base de spiruline pour soutenir énergie et tonus au quotidien.",
+        "reference": "Flacon de 120 gélules",
+        "component": [
+            "Spiruline bio"
+        ],
+        "tags": [
+            "spiruline",
+            "énergie",
+            "antioxydant"
+        ],
+        "category": "nutrition",
+        "age_group": "all",
+        "allow_reviews": true,
+        "display_price": true,
+        "allow_order": true,
+        "display_recommendations": true,
+        "ordonnance": false
+    }
+}

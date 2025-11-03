@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+Test_app
+users.json
+reviews.json
+user_product_interactions.json
+archives/
+To_do.txt
+migrate_password_to_hash.py
+*.db
+functionalities_switch.json
+.env

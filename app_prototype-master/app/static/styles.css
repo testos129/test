@@ -1,0 +1,765 @@
+/* ===========================
+   === BACKGROUND GLOBAL ===
+   =========================== */
+body {
+    background: linear-gradient(135deg, #f9fafb, #f3f4f6); /* background par défaut */
+    color: #1a1a1a; /* couleur du texte par défaut */
+}
+/* ===========================
+    === STYLES HOME ===
+    =========================== */
+.hero {
+    background: linear-gradient(135deg, #e9fdf5, #d7fbf0);
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.white-input .q-field__control {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+}
+.white-input .q-field__native,
+.white-input input {
+    background: transparent !important;
+    color: #111827;
+}
+.white-input .q-field__control:before,
+.white-input .q-field__control:after { display: none !important; }
+
+.product-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;                 
+    border-radius: 14px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.05);    
+    padding: 1.2rem;
+    transition: box-shadow 0.18s ease, transform 0.18s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.card-fixed { 
+    min-height: 240px; 
+}
+
+.hover-lift:hover { 
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+.product-header { align-items: flex-start; }
+.product-thumb { width: 96px; height: 96px; object-fit: cover; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.product-title {
+    font-size: 1.3rem;  
+    font-weight: 600;
+    line-height: 1.4;
+    color: #1f2937;
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-clamp: 2;
+}
+
+.price-chip {
+    background: linear-gradient(90deg, #10b981, #059669);
+    color: #fff;
+    font-weight: 700;
+    padding: 0.35rem 0.6rem;
+    border-radius: 10px;
+    font-size: .9rem;
+    box-shadow: 0 3px 10px rgba(16,185,129,.18);
+}
+
+.ord-chip {
+    background: #ef4444;
+    color: #fff;
+    font-weight: 700;
+    padding: 0.3rem 0.55rem;
+    border-radius: 999px;
+    font-size: .72rem;
+    letter-spacing: .01em;
+    box-shadow: 0 2px 6px rgba(239,68,68,0.25);
+    text-transform: uppercase;
+}
+
+.tag-bubble {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.35rem 0.8rem;
+    border-radius: 9999px;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    transition: transform .15s ease, box-shadow .2s ease, opacity .2s ease;
+    opacity: 0.95;
+}
+
+.tag-bubble:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+    opacity: 1;
+}
+
+.bubble-close {
+    background: transparent !important;
+    color: inherit !important;
+    box-shadow: none !important;
+    min-width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.bubble-close:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.skeleton-card { position: relative; overflow: hidden; }
+.skeleton {
+    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 37%, #f3f4f6 63%);
+    background-size: 400% 100%;
+    animation: shimmer 1.2s infinite;
+}
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+.rating-row .material-icons { vertical-align: middle; }
+.card-actions { margin-top: auto; }
+.card-actions .q-btn { min-height: 34px; }
+
+/* ===========================
+    === GLASS CARD ===
+    =========================== */
+.glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(14px);
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.glass-card:hover {
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* ===========================
+    === STYLES PRODUIT ===
+    =========================== */
+/* body.theme-product {
+    background: #f9fdfb;
+    color: #1a1a1a;
+}*/
+
+body.theme-product .main-product-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 1rem;
+    align-items: start;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+body.theme-product .main-product-card:hover {
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+body.theme-product .main-product-card img {
+    border-radius: 16px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    width: 100%;
+    max-height: 350px;
+    object-fit: cover;
+}
+body.theme-product .main-product-info h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+}
+body.theme-product .main-product-info .price-chip {
+    font-size: 1rem;
+    margin-right: 0.8rem;
+}
+
+body.theme-product .tag-bubble { margin-right: 0.4rem; margin-top: 0.4rem; }
+
+body.theme-product .similar-section h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+}
+body.theme-product .similar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.2rem;
+}
+body.theme-product .similar-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+body.theme-product .similar-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+body.theme-product .similar-card img {
+    border-radius: 12px;
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    margin-bottom: 0.8rem;
+}
+body.theme-product .similar-card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+}
+
+/* ============================
+=== BOUTONS GLOBAUX ===
+============================ */
+
+/* --- Bouton d’action principale --- */
+.btn-primary {
+    background-color: #2563EB !important;
+    color: #FFFFFF !important;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.55rem 1rem;
+    font-size: 0.95rem;
+    box-shadow: 0 3px 8px rgba(14,165,233,0.15);
+    transition: all 0.2s ease;
+    text-transform: none !important;
+}
+.btn-primary:hover {
+    background-color: #1D4ED8 !important;
+    box-shadow: 0 5px 14px rgba(2,132,199,0.2);
+    transform: translateY(-1px);
+}
+
+/* --- Bouton secondaire (ex: Vérifier dispo, Rechercher itinéraire) --- */
+.btn-secondary {
+    background-color: #f3f4f6 !important;
+    color: #111827 !important;
+    font-weight: 500;
+    border-radius: 10px;
+    padding: 0.55rem 1rem;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    text-transform: none !important;
+}
+.btn-secondary:hover {
+    background-color: #e5e7eb !important;
+    transform: translateY(-1px);
+}
+
+/* --- Boutons liés à l'authentification (Se connecter / S’inscrire) --- */
+.btn-auth {
+    background-color: #3b82f6 !important;
+    color: white !important;
+    font-weight: 700;
+    border-radius: 10px;
+    padding: 0.55rem 1.2rem;
+    font-size: 0.95rem;
+    box-shadow: 0 3px 8px rgba(59,130,246,0.2);
+    transition: all 0.2s ease;
+    text-transform: uppercase !important;  /*Force les majuscules*/
+    letter-spacing: 0.5px;
+}
+.btn-auth:hover {
+    background-color: #2563eb !important;
+    box-shadow: 0 5px 14px rgba(37,99,235,0.25);
+    transform: translateY(-1px);
+}
+
+/* --- Bouton retour / navigation secondaire --- */
+.btn-back {
+    background-color: #e5e7eb !important; 
+    color: #374151 !important;
+    font-weight: 500;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+    text-transform: none !important;
+}
+.btn-back:hover {
+    background-color: #d1d5db !important;
+}
+
+/* --- Bouton succès (ex: Recharger wallet) --- */
+.btn-success {
+    background-color: #10b981 !important; 
+    color: white !important;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.55rem 1.2rem;
+    font-size: 0.95rem;
+    box-shadow: 0 3px 8px rgba(16,185,129,0.18);
+    transition: all 0.2s ease;
+    text-transform: none !important;
+}
+.btn-success:hover {
+    background-color: #059669 !important;
+    box-shadow: 0 5px 14px rgba(5,150,105,0.25);
+    transform: translateY(-1px);
+}
+
+/* --- Bouton annulation --- */
+.btn-cancel {
+    background-color: #fef3c7 !important;
+    color: #92400e !important;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.55rem 1.2rem;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    text-transform: none !important;
+}
+.btn-cancel:hover {
+    background-color: #fde68a !important;
+}
+
+/* --- Bouton édition (Modifier commentaire) --- */
+.btn-edit {
+    background-color: #f3f4f6 !important;
+    color: #374151 !important;
+    font-weight: 500;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    text-transform: none !important;
+}
+.btn-edit:hover {
+    background-color: #e5e7eb !important;
+}
+
+/* --- Bouton suppression (Supprimer commentaire) --- */
+.btn-delete {
+    background-color: #ef4444 !important; 
+    color: white !important;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    text-transform: none !important;
+}
+.btn-delete:hover {
+    background-color: #dc2626 !important;
+    box-shadow: 0 4px 10px rgba(239,68,68,0.2);
+}
+
+/* --- Boutons montant (wallet) --- */
+.btn-amount {
+    background-color: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+    color: #111827 !important;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    text-transform: none !important;
+}
+.btn-amount:hover {
+    border-color: #16a34a !important;
+    color: #16a34a !important;
+    box-shadow: 0 2px 6px rgba(22,163,74,0.15);
+}
+
+/* --- Bouton recommandé pour vous --- */
+.btn-recommended {
+    background-color: #EDE9FE !important;
+    color: #5B21B6 !important;
+    font-weight: 500;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+    text-transform: none !important;
+}
+.btn-recommended:hover {
+    background-color: #DDD6FE !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    transform: translateY(-1px);
+}
+                
+/* --- Bouton panier --- */
+.btn-cart {
+    background-color: #FEF3C7 !important;  /*D1FAE5*/
+    color: #78350F !important;  /*065F46*/
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.55rem 1rem;
+    font-size: 0.95rem;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    text-transform: none !important;
+}
+
+.btn-cart:hover {
+    background-color: #FEF08A !important;  /*A7F3D0*/
+    box-shadow: 0 5px 14px rgba(0,0,0,0.12);
+    transform: translateY(-1px);
+}
+                
+/* ============================
+=== NAVBAR ===
+============================ */
+                
+.app-navbar {
+    background: linear-gradient(90deg, #34a853, #1e7d32);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Marque / logo */
+.app-navbar .nav-brand {
+    color: #ffffff;
+    font-weight: 800;
+    letter-spacing: .2px;
+    text-transform: none !important;
+}
+.app-navbar .nav-brand:hover { opacity: .9; }
+
+/* Nom utilisateur */
+.app-navbar .nav-username {
+    color: white;
+    font-weight: 600;
+}
+
+/* Boutons génériques */
+.app-navbar .nav-btn {
+    border-radius: 10px;
+    padding: .45rem .85rem;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    transition: all .2s ease;
+    text-transform: none !important;
+}
+
+/* Commandes en cours */
+.app-navbar .nav-orders {
+    background: #60a5fa; 
+    color: #1e3a8a;
+    border: 1px solid #3b82f6;
+    position: relative;
+}
+
+.app-navbar .nav-orders:hover {
+    background: #3b82f6;
+    color: white;
+}
+
+/* Wallet */
+.app-navbar .nav-wallet {
+    background: #256D3A;
+    color: #ffffff;
+    border: 1px solid #1B5E20;
+}
+.app-navbar .nav-wallet:hover {
+    background: #2E7D32;
+}
+
+/* Panier */
+.app-navbar .nav-cart {
+    background: #facc15;
+    color: #1f2937;
+    border: 1px solid #eab308;
+    position: relative;
+}
+.app-navbar .nav-cart:hover { background: #fbbf24; }
+
+/* Paramètres */
+.app-navbar .nav-settings {
+    background: #9ca3af;
+    color: #111827;
+    border: 1px solid #6b7280;
+    position: relative;
+}
+.app-navbar .nav-settings:hover {
+    background: #d1d5db;
+}
+
+/* Profil utilisateur */
+.app-navbar .nav-profile {
+    background: #3b82f6;
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: .45rem .8rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    transition: background-color .2s ease, transform .15s ease;
+}
+.app-navbar .nav-profile:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+/* Logout */
+.app-navbar .nav-danger {
+    background: #ef4444;
+    color: #ffffff;
+    border: 1px solid #b91c1c;
+}
+.app-navbar .nav-danger:hover {
+    background: #dc2626;
+}
+
+/* Badge du panier */
+.app-navbar .nav-badge {
+    background: #ef4444;
+    color: #fff;
+    font-size: .70rem;
+    font-weight: 700;
+    border-radius: 9999px;
+    padding: .05rem .35rem;
+    position: absolute; top: -6px; left: -6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.12);
+}
+
+/* Avatar */
+.app-navbar .nav-avatar {
+    width: 40px; height: 40px;
+    border-radius: 9999px;
+    border: 2px solid #e5e7eb;
+    box-shadow: 0 2px 6px rgba(0,0,0,.08);
+    object-fit: cover;
+}
+
+/* Admin buttons - styles */
+.admin-action {
+  border-radius: 14px;
+  padding: 1rem 1.25rem; /* p-6 approx */
+  font-weight: 600;
+  font-size: 1.05rem;
+  width: 100%;
+  box-shadow: 0 8px 20px rgba(2,6,23,0.06);
+  border: 1px solid rgba(0,0,0,0.04);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+}
+
+/* ensure color applies despite Quasar default styling */
+.admin-action,
+.admin-action .q-btn__content {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+/* Blue */
+.admin-action--blue {
+  background-color: #2563EB !important; /* blue-600 */
+  color: #ffffff !important;
+  border-color: rgba(14,41,121,0.12) !important;
+}
+.admin-action--blue:hover { background-color: #1e40af !important; transform: translateY(-3px); }
+
+/* Green */
+.admin-action--green {
+  background-color: #10B981 !important; /* green-500 */
+  color: #ffffff !important;
+  border-color: rgba(6,95,70,0.08) !important;
+}
+.admin-action--green:hover { background-color: #059669 !important; transform: translateY(-3px); }
+
+/* Purple */
+.admin-action--purple {
+  background-color: #7C3AED !important; /* purple */
+  color: #ffffff !important;
+  border-color: rgba(66,8,131,0.08) !important;
+}
+.admin-action--purple:hover { background-color: #6d28d9 !important; transform: translateY(-3px); }
+
+/* Gray */
+.admin-action--gray {
+  background-color: #374151 !important; /* gray-700 */
+  color: #f9fafb !important;
+  border-color: rgba(255,255,255,0.03) !important;
+}
+.admin-action--gray:hover { background-color: #4b5563 !important; transform: translateY(-3px); }
+
+/* Bouton "Retour à l'accueil" */
+.btn-return-home {
+  background-color: #1565c0 !important; /* Bleu principal */
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  border: none !important;
+  transition: all 0.2s ease-in-out;
+}
+.btn-return-home:hover {
+  background-color: #1976d2 !important; /* Bleu un peu plus clair au hover */
+  transform: translateY(-3px);
+}
+
+/* Bouton "Télécharger le reçu" */
+.btn-download-receipt {
+  background-color: #2e7d32 !important; /* Vert principal */
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  border: none !important;
+  transition: all 0.2s ease-in-out;
+}
+.btn-download-receipt:hover {
+  background-color: #388e3c !important; /* Vert plus clair au hover */
+  transform: translateY(-3px);
+}
+
+/* === Bouton principal "Réserver la commande" === */
+.btn-claim-order {
+  background-color: #1565c0 !important; /* Bleu principal */
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  border: none !important;
+  transition: all 0.2s ease-in-out;
+}
+.btn-claim-order:hover {
+  background-color: #1976d2 !important; /* Bleu clair au hover */
+  transform: translateY(-3px);
+}
+
+/* === Bouton "Voir les détails" ou "Ouvrir la commande" === */
+.btn-view-details {
+  background-color: #0288d1 !important; /* Bleu cyan */
+  color: #ffffff !important;
+  font-weight: 500 !important;
+  border-radius: 6px !important;
+  padding: 6px 14px !important;
+  border: none !important;
+  transition: all 0.2s ease-in-out;
+}
+.btn-view-details:hover {
+  background-color: #039be5 !important;
+  transform: translateY(-2px);
+}
+
+/* === Bouton "Annuler la réservation" === */
+.btn-cancel-order {
+  background-color: #c62828 !important; /* Rouge foncé */
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  border: none !important;
+  transition: all 0.2s ease-in-out;
+}
+.btn-cancel-order:hover {
+  background-color: #d32f2f !important; /* Rouge plus clair au hover */
+  transform: translateY(-3px);
+}
+
+/* === Bouton "Confirmer la livraison" === */
+.btn-confirm-delivery {
+  background-color: #2e7d32 !important; /* Vert principal */
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  border: none !important;
+  transition: all 0.2s ease-in-out;
+}
+.btn-confirm-delivery:hover {
+  background-color: #388e3c !important;
+  transform: translateY(-3px);
+}
+
+/* === Bouton "Retour" ou "Précédent" === */
+.btn-back {
+  background-color: #9e9e9e !important; /* Gris neutre */
+  color: #ffffff !important;
+  font-weight: 500 !important;
+  border-radius: 6px !important;
+  padding: 6px 14px !important;
+  border: none !important;
+  transition: all 0.2s ease-in-out;
+}
+.btn-back:hover {
+  background-color: #b0b0b0 !important;
+  transform: translateY(-2px);
+}
+
+/* === Bouton "🔄 Rafraîchir" === */
+.btn-refresh {
+  background-color: #DBEAFE !important;
+  color: #1D4ED8 !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  border: 1px solid #ddd !important;
+  transition: all 0.2s ease-in-out;
+}
+.btn-refresh:hover {
+  background-color: #BFDBFE !important;
+  transform: translateY(-2px);
+}
+
+/* === Bouton "📦 Mes livraisons" === */
+.btn-my-deliveries {
+  position: relative; /* permet de positionner la bulle */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #EDE9FE !important;
+  color: #5B21B6 !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  padding: 8px 18px !important;
+  border: none !important;
+  transition: all 0.2s ease-in-out;
+}
+.btn-my-deliveries:hover {
+  background-color: #DDD6FE !important;
+  transform: translateY(-3px);
+}
+
+.btn-my-deliveries .order-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: #ef4444; /* rouge tailwind-like */
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border-radius: 9999px; /* cercle parfait */
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 2px white; /* petit contour blanc */
+  transition: transform 0.15s ease;
+}
+
+.btn-my-deliveries:hover .order-badge {
+  transform: scale(1.1);
+}
