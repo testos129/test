@@ -7,11 +7,11 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 import io
 
-from services.auth import get_current_user, sessions
-from services.users import get_user_info, get_last_order
-from components.navbar import navbar
-from components.theme import apply_background
-from translations.translations import t
+from app.services.auth import get_current_user, sessions
+from app.services.users import get_user_info, get_last_order
+from app.components.navbar import navbar
+from app.components.theme import apply_background
+from app.translations.translations import t
 
 
 @app.get("/generate_last_order_pdf")

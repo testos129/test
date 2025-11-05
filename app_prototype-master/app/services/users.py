@@ -1,14 +1,17 @@
 import sqlite3
 from datetime import datetime, timedelta
+from pathlib import Path
 from nicegui import ui
 import re
 from fastapi import Request
 
-from security.passwords import hash_password
-from services.items import get_total_price_for_product, get_product
-from translations.translations import t
+from app.security.passwords import hash_password
+from app.services.items import get_total_price_for_product, get_product
+from app.translations.translations import t
 
-DB_PATH = "data/data.db"
+DATA_DIR = Path(__file__).resolve().parents[1] / 'data'
+DB_PATH = DATA_DIR / 'data.db'
+
 
 def get_connection():
     return sqlite3.connect(DB_PATH)

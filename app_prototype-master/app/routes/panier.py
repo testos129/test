@@ -2,12 +2,12 @@ from nicegui import ui, app
 from fastapi.responses import RedirectResponse
 from fastapi import Request
 
-from components.navbar import navbar
-from components.theme import apply_background
-from services.auth import get_current_user, sessions
-from services.users import record_visit, get_panier, add_panier_item, remove_panier_item, get_user_info, update_user
-from services.items import get_product, get_total_price_for_product, get_total_qty
-from translations.translations import t
+from app.components.navbar import navbar
+from app.components.theme import apply_background
+from app.services.auth import get_current_user, sessions
+from app.services.users import record_visit, get_panier, add_panier_item, remove_panier_item, get_user_info, update_user
+from app.services.items import get_product, get_total_price_for_product, get_total_qty
+from app.translations.translations import t
 
 
 @ui.page('/panier')

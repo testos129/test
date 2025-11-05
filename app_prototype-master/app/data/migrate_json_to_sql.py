@@ -4,14 +4,16 @@ from pathlib import Path
 from collections import Counter
 
 
+BASE_DIR = Path(__file__).resolve().parent
+
 # chemins des fichiers
-REVIEWS_FILE = Path("data/reviews.json")
-USERS_FILE = Path("data/users.json")
-PRODUCTS_FILE = Path("data/products.json")
-PHARMACIES_FILE = Path("data/pharmacies.json")
-USER_PRODUCT_FILE = Path("data/user_product_interactions.json")
-SETTINGS_FILE = Path("data/settings.json")
-DB_FILE = Path("data/data.db")
+REVIEWS_FILE = BASE_DIR / "reviews.json"
+USERS_FILE = BASE_DIR / "users.json"
+PRODUCTS_FILE = BASE_DIR / "products.json"
+PHARMACIES_FILE = BASE_DIR / "pharmacies.json"
+USER_PRODUCT_FILE = BASE_DIR / "user_product_interactions.json"
+SETTINGS_FILE = BASE_DIR / "settings.json"
+DB_FILE = BASE_DIR / "data.db"
 
 
 def init_db(conn):

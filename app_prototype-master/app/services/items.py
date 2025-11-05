@@ -1,9 +1,12 @@
 import sqlite3
+from pathlib import Path
 from rapidfuzz import fuzz
 
-from services.file_io import load_json
+from app.services.file_io import load_json
 
-DB_PATH = "data/data.db"
+DATA_DIR = Path(__file__).resolve().parents[1] / 'data'
+DB_PATH = DATA_DIR / 'data.db'
+
 
 def get_connection():
     return sqlite3.connect(DB_PATH)

@@ -5,14 +5,14 @@ import requests
 from urllib.parse import unquote
 import json
 
-from components.navbar import navbar
-from components.theme import apply_background
-from services.auth import get_current_user, sessions
-from services.users import record_visit, get_panier, get_wallet_balance, add_wallet_balance, delete_panier, register_order, get_user_info
-from services.items import get_product, get_total_price_for_product, remove_stock_product, get_total_qty, get_pharmacy, get_total_price_for_product
-from recommendations.user_product_matrix import update_with_panier
-from services.distance import optimize_route
-from translations.translations import t
+from app.components.navbar import navbar
+from app.components.theme import apply_background
+from app.services.auth import get_current_user, sessions
+from app.services.users import record_visit, get_panier, get_wallet_balance, add_wallet_balance, delete_panier, register_order, get_user_info
+from app.services.items import get_product, get_total_price_for_product, remove_stock_product, get_total_qty, get_pharmacy, get_total_price_for_product
+from app.recommendations.user_product_matrix import update_with_panier
+from app.services.distance import optimize_route
+from app.translations.translations import t
 
             
 @ui.page('/order')

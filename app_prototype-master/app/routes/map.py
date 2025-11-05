@@ -3,12 +3,12 @@ from fastapi.responses import RedirectResponse
 import json
 from fastapi import Request
 
-from components.navbar import navbar
-from components.theme import apply_background
-from services.auth import get_current_user, sessions
-from services.users import record_visit, get_user_info
-from services.items import get_product, get_pharmacy, get_pharmacies_with_product, get_min_price_for_product
-from translations.translations import t
+from app.components.navbar import navbar
+from app.components.theme import apply_background
+from app.services.auth import get_current_user, sessions
+from app.services.users import record_visit, get_user_info
+from app.services.items import get_product, get_pharmacy, get_pharmacies_with_product, get_min_price_for_product
+from app.translations.translations import t
 
 
 @ui.page('/product/{product_id}/map')
