@@ -3,9 +3,6 @@ from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 import os
 
-BASE_DIR = Path(__file__).resolve().parent
-DATA_DIR = BASE_DIR / 'data'
-
 
 def _get_bool_env(var_name: str, default: bool) -> bool:
     """Return a boolean value from an environment variable."""
@@ -41,15 +38,15 @@ from .routes.delivery import (
 if __name__ in {"__main__", "__mp_main__"}:
 
     # Initialisation des tables (vides) dans la base de données si elle n'existe pas
-    DB_FILE = DATA_DIR / "data.db"
+    DB_FILE = Path(r"data/data.db")
 
-    app.mount("/data/images", StaticFiles(directory=str(DATA_DIR / "images")), name="images")
+    app.mount("/data/images", StaticFiles(directory="data/images"), name="images")
 
     if not DB_FILE.exists():
 
          import sqlite3
-         from app.data.create_db import init_db
-         from app.data.migrate_json_to_sql import migrate_products, migrate_pharmacies, migrate_settings
+         from data.create_db import init_db
+         from data.migrate_json_to_sql import migrate_products, migrate_pharmacies, migrate_settings
 
          conn = sqlite3.connect(DB_FILE)
          print("📂 Base de données inexistante, création en cours...")
