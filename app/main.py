@@ -12,9 +12,27 @@ def _get_bool_env(var_name: str, default: bool) -> bool:
     return value.strip().lower() in {"1", "true", "yes", "on"}
 
 # Import des pages
-from routes import home, details, login, map, profil, panier, order, thanks, wallet, itinerary, admin_panel, in_progress
-from routes.admin import users, products, pharmacies, settings
-from routes.delivery import delivery_home, delivery_order, delivery_profil, delivery_my
+from .routes import (
+    admin_panel,
+    details,
+    home,
+    in_progress,
+    itinerary,
+    login,
+    map,
+    order,
+    panier,
+    profil,
+    thanks,
+    wallet,
+)
+from .routes.admin import pharmacies, products, settings, users
+from .routes.delivery import (
+    delivery_home,
+    delivery_my,
+    delivery_order,
+    delivery_profil,
+)
 
 
 if __name__ in {"__main__", "__mp_main__"}:
