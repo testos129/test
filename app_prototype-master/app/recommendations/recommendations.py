@@ -1,5 +1,5 @@
-from services.users import get_visit_history
-from services.items import get_connection, get_product
+from app.services.users import get_visit_history
+from app.services.items import get_connection, get_product
 
 
 def find_similar_products(product_id: int, min_common_tags: int = 2) -> list[dict]:

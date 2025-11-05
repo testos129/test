@@ -2,12 +2,12 @@ from nicegui import ui, app
 from fastapi import Request
 from fastapi.responses import RedirectResponse
 
-from components.theme import apply_background
-from components.navbar_delivery import navbar_delivery
-from services.auth import get_current_user, sessions
-from services.users import get_user_info, update_user, get_orders_for_delivery_person
-from security.passwords import hash_password
-from translations.translations import t
+from app.components.theme import apply_background
+from app.components.navbar_delivery import navbar_delivery
+from app.services.auth import get_current_user, sessions
+from app.services.users import get_user_info, update_user, get_orders_for_delivery_person
+from app.security.passwords import hash_password
+from app.translations.translations import t
 
 
 @ui.page("/delivery/profil")

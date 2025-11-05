@@ -7,12 +7,12 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 import io
 
-from components.theme import apply_background
-from components.navbar import navbar
-from services.auth import get_current_user, sessions
-from services.users import get_user_info, update_user, get_visit_history, get_user_from_id, get_order_history, get_order_details
-from security.passwords import hash_password
-from translations.translations import t
+from app.components.theme import apply_background
+from app.components.navbar import navbar
+from app.services.auth import get_current_user, sessions
+from app.services.users import get_user_info, update_user, get_visit_history, get_user_from_id, get_order_history, get_order_details
+from app.security.passwords import hash_password
+from app.translations.translations import t
 
 
 @app.get("/generate_order_pdf")

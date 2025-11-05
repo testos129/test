@@ -5,13 +5,13 @@ import requests
 from urllib.parse import unquote
 import json
 
-from components.navbar import navbar
-from components.theme import apply_background
-from services.auth import get_current_user, sessions
-from services.users import record_visit, get_user_info
-from services.distance import haversine_dist
-from services.items import get_product, get_pharmacies_with_product, get_pharmacy
-from translations.translations import t
+from app.components.navbar import navbar
+from app.components.theme import apply_background
+from app.services.auth import get_current_user, sessions
+from app.services.users import record_visit, get_user_info
+from app.services.distance import haversine_dist
+from app.services.items import get_product, get_pharmacies_with_product, get_pharmacy
+from app.translations.translations import t
 
 
 @ui.page('/product/{product_id}/itinerary')

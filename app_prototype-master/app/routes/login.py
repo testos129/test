@@ -14,15 +14,15 @@ from dotenv import load_dotenv
 import base64
 
 
-from components.theme import apply_background
-from components.navbar import navbar
-from services.auth import sessions, logout
-from services.users import get_connection, add_user, get_user_info, get_id_from_username, confirm_user, add_code_user, verify_user_code
-from services.settings import get_setting
-from security.passwords import verify_password
-from translations.translations import t
+from app.components.theme import apply_background
+from app.components.navbar import navbar
+from app.services.auth import sessions, logout
+from app.services.users import get_connection, add_user, get_user_info, get_id_from_username, confirm_user, add_code_user, verify_user_code
+from app.services.settings import get_setting
+from app.security.passwords import verify_password
+from app.translations.translations import t
 
-from services.file_io import load_yaml
+from app.services.file_io import load_yaml
 functionalities_switch = load_yaml('components/functionalities_switch.yaml')
 ENABLE_MIN_PASSWORD_LENGHT = functionalities_switch.get('ENABLE_MIN_PASSWORD_LENGHT', True)
 EMAIL_CONFIRMATION_SIGN_UP_ENABLED = functionalities_switch.get('EMAIL_CONFIRMATION_SIGN_UP_ENABLED', True)

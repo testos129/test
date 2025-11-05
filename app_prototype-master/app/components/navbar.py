@@ -2,10 +2,10 @@ from nicegui import ui
 from fastapi.responses import RedirectResponse
 from fastapi import Request
 
-from services.auth import get_current_user
-from services.users import get_len_panier, get_wallet_balance, get_user_from_id, get_user_info, get_in_progress_orders_count
-from services.settings import get_setting
-from translations.translations import t
+from app.services.auth import get_current_user
+from app.services.users import get_len_panier, get_wallet_balance, get_user_from_id, get_user_info, get_in_progress_orders_count
+from app.services.settings import get_setting
+from app.translations.translations import t
 
 
 def navbar(request: Request):

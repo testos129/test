@@ -4,12 +4,12 @@ import os
 from pathlib import Path
 from fastapi import Request
 
-from services.auth import get_current_user, sessions
-from components.navbar import navbar
-from components.theme import apply_background
-from services.users import get_user_info, get_connection
-from services.items import delete_product
-from translations.translations import t
+from app.services.auth import get_current_user, sessions
+from app.components.navbar import navbar
+from app.components.theme import apply_background
+from app.services.users import get_user_info, get_connection
+from app.services.items import delete_product
+from app.translations.translations import t
 
 IMAGES_DIR = Path("data/images")
 IMAGES_DIR.mkdir(parents=True, exist_ok=True)

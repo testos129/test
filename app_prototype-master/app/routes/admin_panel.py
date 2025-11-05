@@ -2,11 +2,11 @@ from nicegui import ui, app
 from fastapi.responses import RedirectResponse
 from fastapi import Request
 
-from services.auth import get_current_user, sessions
-from components.navbar import navbar
-from components.theme import apply_background
-from services.users import get_user_info
-from translations.translations import t
+from app.services.auth import get_current_user, sessions
+from app.components.navbar import navbar
+from app.components.theme import apply_background
+from app.services.users import get_user_info
+from app.translations.translations import t
 
 
 @ui.page('/admin_panel')

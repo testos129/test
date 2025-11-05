@@ -3,15 +3,15 @@ from fastapi import Request
 from fastapi.responses import RedirectResponse
 import json
 
-from components.theme import apply_background
-from components.navbar_delivery import navbar_delivery
-from services.auth import get_current_user, sessions
-from services.users import get_user_info, get_orders_for_delivery_person, cancel_order_delivery, get_order_details
-from services.items import get_pharmacy
-from services.distance import optimize_route
-from translations.translations import t
+from app.components.theme import apply_background
+from app.components.navbar_delivery import navbar_delivery
+from app.services.auth import get_current_user, sessions
+from app.services.users import get_user_info, get_orders_for_delivery_person, cancel_order_delivery, get_order_details
+from app.services.items import get_pharmacy
+from app.services.distance import optimize_route
+from app.translations.translations import t
 
-from services.file_io import load_yaml
+from app.services.file_io import load_yaml
 functionalities_switch = load_yaml('components/functionalities_switch.yaml')
 ALLOW_DELIVERY_CANCEL = functionalities_switch.get('ALLOW_DELIVERY_CANCEL', True)
 

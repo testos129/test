@@ -3,13 +3,13 @@ from fastapi.responses import RedirectResponse
 from fastapi import Request
 import json
 
-from components.navbar import navbar
-from components.theme import apply_background
-from services.auth import get_current_user, sessions
-from services.users import record_visit, get_user_info, get_orders_for_customer, get_order_details
-from services.items import get_pharmacy
-from services.distance import optimize_route
-from translations.translations import t
+from app.components.navbar import navbar
+from app.components.theme import apply_background
+from app.services.auth import get_current_user, sessions
+from app.services.users import record_visit, get_user_info, get_orders_for_customer, get_order_details
+from app.services.items import get_pharmacy
+from app.services.distance import optimize_route
+from app.translations.translations import t
 
             
 @ui.page('/orders_in_progress')
