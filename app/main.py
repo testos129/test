@@ -1,21 +1,7 @@
-"""Application entry point for PharmaLink."""
-
+from nicegui import ui, app
 from pathlib import Path
-import os
-import sys
-
-
-if __package__ is None or __package__ == "":
-    CURRENT_DIR = Path(__file__).resolve().parent
-    sys.path.insert(0, str(CURRENT_DIR.parent))
-    __package__ = CURRENT_DIR.name
-
-
 from fastapi.staticfiles import StaticFiles
-from nicegui import app, ui
-
-BASE_DIR = Path(__file__).resolve().parent
-DATA_DIR = BASE_DIR / 'data'
+import os
 
 
 def _get_bool_env(var_name: str, default: bool) -> bool:
@@ -52,32 +38,27 @@ from .routes.delivery import (
 if __name__ in {"__main__", "__mp_main__"}:
 
     # Initialisation des tables (vides) dans la base de données si elle n'existe pas
-    DB_FILE = DATA_DIR / "data.db"
+    DB_FILE = Path(r"data/data.db")
 
-    app.mount("/data/images", StaticFiles(directory=str(DATA_DIR / "images")), name="images")
+    app.mount("/data/images", StaticFiles(directory="data/images"), name="images")
 
     if not DB_FILE.exists():
 
-        import sqlite3
+         import sqlite3
+         from data.create_db import init_db
+         from data.migrate_json_to_sql import migrate_products, migrate_pharmacies, migrate_settings
 
-        from .data.create_db import init_db
-        from .data.migrate_json_to_sql import (
-            migrate_pharmacies,
-            migrate_products,
-            migrate_settings,
-        )
-
-        conn = sqlite3.connect(DB_FILE)
-        print("📂 Base de données inexistante, création en cours...")
-        init_db(conn)
-        print("🚀 Migration des données produits et pharmacies...")
-        migrate_products(conn)
-        migrate_pharmacies(conn)
-        migrate_settings(conn)
-        print("🎉 Migration terminée avec succès.")
-        conn.close()
+         conn = sqlite3.connect(DB_FILE)
+         print("📂 Base de données inexistante, création en cours...")
+         init_db(conn)
+         print("🚀 Migration des données produits et pharmacies...")
+         migrate_products(conn)
+         migrate_pharmacies(conn)
+         migrate_settings(conn)
+         print("🎉 Migration terminée avec succès.")
+         conn.close()
     else:
-        print(f"📂 Base de données trouvées dans {DB_FILE}")
+         print(f"📂 Base de données trouvées dans {DB_FILE}")
 
 
     # Lancement de l'application
