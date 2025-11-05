@@ -3,14 +3,14 @@ from fastapi import Request
 from fastapi.responses import RedirectResponse
 import json
 
-from components.theme import apply_background
-from components.navbar_delivery import navbar_delivery
-from services.auth import get_current_user, sessions
-from services.users import get_user_info, get_order_details, take_order, get_orders_for_delivery_person
-from services.items import get_pharmacy, get_product
-from services.distance import optimize_route
-from services.settings import get_setting
-from translations.translations import t
+from app.components.theme import apply_background
+from app.components.navbar_delivery import navbar_delivery
+from app.services.auth import get_current_user, sessions
+from app.services.users import get_user_info, get_order_details, take_order, get_orders_for_delivery_person
+from app.services.items import get_pharmacy, get_product
+from app.services.distance import optimize_route
+from app.services.settings import get_setting
+from app.translations.translations import t
 
 
 @ui.page("/delivery/order/{order_id}")

@@ -2,14 +2,16 @@ import sqlite3
 import json
 from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent
+
 # fichiers de sortie
-USERS_FILE = Path("data/users.json")
-REVIEWS_FILE = Path("data/reviews.json")
-PRODUCTS_FILE = Path("data/products.json")
-PHARMACIES_FILE = Path("data/pharmacies.json")
-USER_PRODUCT_FILE = Path("data/user_product_interactions.json")
-SETTINGS_FILE = Path("data/settings.json")
-DB_FILE = Path("data/data.db")
+USERS_FILE = BASE_DIR / "users.json"
+REVIEWS_FILE = BASE_DIR / "reviews.json"
+PRODUCTS_FILE = BASE_DIR / "products.json"
+PHARMACIES_FILE = BASE_DIR / "pharmacies.json"
+USER_PRODUCT_FILE = BASE_DIR / "user_product_interactions.json"
+SETTINGS_FILE = BASE_DIR / "settings.json"
+DB_FILE = BASE_DIR / "data.db"
 
 
 def export_users(conn):

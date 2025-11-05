@@ -4,12 +4,12 @@ from fastapi.responses import RedirectResponse
 from datetime import datetime
 import asyncio
 
-from components.theme import apply_background
-from components.navbar_delivery import navbar_delivery
-from services.auth import get_current_user, sessions
-from services.users import get_user_info, get_all_pending_order, get_orders_for_delivery_person
-from services.distance import haversine_dist
-from translations.translations import t
+from app.components.theme import apply_background
+from app.components.navbar_delivery import navbar_delivery
+from app.services.auth import get_current_user, sessions
+from app.services.users import get_user_info, get_all_pending_order, get_orders_for_delivery_person
+from app.services.distance import haversine_dist
+from app.translations.translations import t
 
 
 @ui.page("/delivery/home")
@@ -207,12 +207,12 @@ async def delivery_home_page(request: Request):
 # from fastapi.responses import RedirectResponse
 # from datetime import datetime
 
-# from components.theme import apply_background
-# from components.navbar_delivery import navbar_delivery
-# from services.auth import get_current_user, sessions
-# from services.users import get_user_info, get_all_pending_order
-# from services.distance import haversine_dist
-# from translations.translations import t
+# from app.components.theme import apply_background
+# from app.components.navbar_delivery import navbar_delivery
+# from app.services.auth import get_current_user, sessions
+# from app.services.users import get_user_info, get_all_pending_order
+# from app.services.distance import haversine_dist
+# from app.translations.translations import t
 
 
 # @ui.page("/delivery/home")

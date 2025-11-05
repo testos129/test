@@ -3,17 +3,17 @@ from fastapi.responses import RedirectResponse
 from datetime import datetime
 from fastapi import Request
 
-from components.navbar import navbar
-from components.theme import apply_background
-from services.auth import get_current_user, sessions
-from services.reviews import get_average_rating, get_review_infos
-from services.users import record_visit, add_panier_item, get_connection, get_user_from_id, get_user_info
-from services.items import get_tag_color, get_product, get_min_price_for_product
-from recommendations.recommendations import find_similar_products
-from recommendations.user_product_matrix import update_interaction, update_with_page
-from translations.translations import t
+from app.components.navbar import navbar
+from app.components.theme import apply_background
+from app.services.auth import get_current_user, sessions
+from app.services.reviews import get_average_rating, get_review_infos
+from app.services.users import record_visit, add_panier_item, get_connection, get_user_from_id, get_user_info
+from app.services.items import get_tag_color, get_product, get_min_price_for_product
+from app.recommendations.recommendations import find_similar_products
+from app.recommendations.user_product_matrix import update_interaction, update_with_page
+from app.translations.translations import t
 
-from services.file_io import load_json, load_yaml
+from app.services.file_io import load_json, load_yaml
 functionalities_switch = load_yaml('components/functionalities_switch.yaml')
 FILTER_PRODUCT_REVIEWS_ENABLED = functionalities_switch.get('FILTER_PRODUCT_REVIEWS_ENABLED', True)
 FILTER_PRICE_DISPLAY_ENABLED = functionalities_switch.get('FILTER_PRICE_DISPLAY_ENABLED', True)

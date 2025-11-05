@@ -3,11 +3,11 @@ from fastapi.responses import RedirectResponse
 import asyncio
 from fastapi import Request
 
-from services.auth import get_current_user, sessions
-from services.users import get_wallet_balance, add_wallet_balance, get_wallet_history, get_user_info
-from components.navbar import navbar
-from components.theme import apply_background
-from translations.translations import t
+from app.services.auth import get_current_user, sessions
+from app.services.users import get_wallet_balance, add_wallet_balance, get_wallet_history, get_user_info
+from app.components.navbar import navbar
+from app.components.theme import apply_background
+from app.translations.translations import t
 
 
 @ui.page('/wallet')

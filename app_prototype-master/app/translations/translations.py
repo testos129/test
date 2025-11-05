@@ -1,4 +1,4 @@
-from services.file_io import load_json
+from app.services.file_io import load_json
 
 
 # Cache des traductions

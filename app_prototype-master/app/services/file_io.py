@@ -1,17 +1,31 @@
 import json
-import os
+from pathlib import Path
 import yaml
+
+BASE_DIR = Path(__file__).resolve().parents[1]
+
+
+def _resolve(path: str) -> Path:
+
+    """Return an absolute path inside the application package."""
+
+    candidate = Path(path)
+    if not candidate.is_absolute():
+        candidate = BASE_DIR / candidate
+    return candidate
 
 
 def load_yaml(path: str) -> dict:
 
     """Charge un fichier YAML et retourne un dictionnaire."""
-    
-    if not os.path.exists(path):
-        print(f"File not found at path: {path}")
+
+    target = _resolve(path)
+
+    if not target.exists():
+        print(f"File not found at path: {target}")
         return {}
-    
-    with open(path, 'r', encoding='utf-8') as f:
+
+    with target.open('r', encoding='utf-8') as f:
         try:
             data = yaml.safe_load(f)
             return data if data is not None else {}
@@ -24,16 +38,20 @@ def load_json(path: str) -> dict:
 
     """Charge un fichier json"""
 
-    if not os.path.exists(path):
-        print(f"File not found at path: {os.path}")
+    target = _resolve(path)
+
+    if not target.exists():
+        print(f"File not found at path: {target}")
         return {}
-    with open(path, 'r', encoding='utf-8') as f:
+    with target.open('r', encoding='utf-8') as f:
         return json.load(f)
 
 
 def save_json(path: str, data) -> None:
-    
+
     """Ecrit un fichier json"""
-    
-    with open(path, 'w', encoding='utf-8') as f:
+
+    target = _resolve(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with target.open('w', encoding='utf-8') as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
