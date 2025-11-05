@@ -84,8 +84,61 @@ Une application web interactive développée en **Python** avec **NiceGUI** perm
 - [pip](https://pip.pypa.io/en/stable/)
 
 ### 2️⃣ Installations des dépendances
+```bash
 pip install -r requirements.txt
-
+```
 
 ### 3️⃣ Lancement de l'application
-python main.py
+```bash
+python -m app.main
+```
+
+### 4️⃣ Aller plus loin
+
+- 📘 Consultez le guide [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) pour mettre en place la CI/CD et déployer l'application (Render, Railway, Fly.io, Ionos, etc.).
+- 🧪 Ajoutez vos tests (ex. `pytest`) puis complétez le workflow `ci.yml` pour renforcer la qualité.
+
+## 🚀 Déploiement et CI/CD
+
+### Intégration continue
+
+Le dépôt inclut un workflow GitHub Actions (`.github/workflows/ci.yml`) qui s’exécute sur chaque `push` ou `pull request` vers les branches `main` et `work`.
+
+- Installation des dépendances Python (versions 3.11 et 3.12).
+- Compilation des modules NiceGUI pour détecter rapidement les erreurs de syntaxe.
+
+Vous pouvez étendre ce workflow en ajoutant des tests automatisés (ex : `pytest`) dès qu’ils seront disponibles.
+
+### Livraison continue (images Docker)
+
+Un second workflow (`.github/workflows/deploy.yml`) construit et publie une image Docker sur le registre GitHub Container Registry (`ghcr.io`) lors :
+
+- d’un déclenchement manuel (`workflow_dispatch`),
+- ou de la création d’un tag de version (`vX.Y.Z`).
+
+Les images peuvent ensuite être déployées automatiquement vers votre hébergeur (Render, Railway, Fly.io, Ionos, etc.) via leurs webhooks ou CLIs respectives.
+
+### Variables d’environnement
+
+L’application lit plusieurs variables d’environnement pour faciliter la configuration :
+
+| Variable | Description | Valeur par défaut |
+| --- | --- | --- |
+| `APP_HOST` | Adresse d’écoute du serveur NiceGUI | `0.0.0.0` |
+| `APP_PORT` | Port d’écoute | `8080` |
+| `APP_RELOAD` | Recharge automatique (mode dev) | `true` |
+| `APP_STORAGE_SECRET` | Secret NiceGUI pour le stockage | `uwu` |
+
+### Exécution via Docker
+
+```bash
+# Construction de l’image
+docker build -t pharmalink:latest .
+
+# Lancement du conteneur (avec rechargement désactivé)
+docker run -p 8080:8080 \
+  -e APP_RELOAD=false \
+  pharmalink:latest
+```
+
+Montez un volume persistant ou migrez vers une base gérée si vous souhaitez conserver la base SQLite entre les déploiements.
