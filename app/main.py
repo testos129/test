@@ -1,9 +1,35 @@
 """Application entry point for PharmaLink."""
 
 from pathlib import Path
-import importlib
-import os
-import sys
+
+from fastapi.staticfiles import StaticFiles
+from nicegui import app, ui
+
+# Import des pages
+from routes import (
+    admin_panel,
+    details,
+    home,
+    in_progress,
+    in_progress_order,
+    itinerary,
+    login,
+    map,
+    order,
+    panier,
+    profil,
+    terms,
+    thanks,
+    wallet,
+)
+from routes.admin import analytics, orders, pharmacies, products, settings, users
+from routes.delivery import (
+    delivery_home,
+    delivery_my,
+    delivery_order,
+    delivery_profil,
+    delivery_wallet,
+)
 
 CURRENT_DIR = Path(__file__).resolve().parent
 if __package__ is None or __package__ == "":
@@ -15,7 +41,7 @@ from fastapi.staticfiles import StaticFiles
 from nicegui import app, ui
 
 BASE_DIR = Path(__file__).resolve().parent
-DATA_DIR = BASE_DIR / 'data'
+DATA_DIR = BASE_DIR / "data"
 
 
 def _get_bool_env(var_name: str, default: bool) -> bool:
@@ -24,30 +50,6 @@ def _get_bool_env(var_name: str, default: bool) -> bool:
     if value is None:
         return default
     return value.strip().lower() in {"1", "true", "yes", "on"}
-
-# Import des pages
-from app.routes import (
-    admin_panel,
-    details,
-    home,
-    in_progress,
-    itinerary,
-    login,
-    map,
-    order,
-    panier,
-    profil,
-    thanks,
-    wallet,
-)
-from app.routes.admin import pharmacies, products, settings, users
-from app.routes.delivery import (
-    delivery_home,
-    delivery_my,
-    delivery_order,
-    delivery_profil,
-)
-
 
 
 def _resolve_module(*candidates: str):
@@ -88,10 +90,11 @@ def main():
     # Initialisation des tables (vides) dans la base de données si elle n'existe pas
     DB_FILE = DATA_DIR / "data.db"
 
-    app.mount("/data/images", StaticFiles(directory=str(DATA_DIR / "images")), name="images")
+    app.mount(
+        "/data/images", StaticFiles(directory=str(DATA_DIR / "images")), name="images"
+    )
 
     if not DB_FILE.exists():
-
         import sqlite3
 
         init_db = create_db_module.init_db
@@ -111,7 +114,6 @@ def main():
     else:
         print(f"📂 Base de données trouvées dans {DB_FILE}")
 
-
     # Lancement de l'application
     host = os.getenv("APP_HOST", "0.0.0.0")
     port = int(os.getenv("APP_PORT", "8080"))
@@ -128,4 +130,3 @@ def main():
 
 if __name__ in {"__main__", "__mp_main__"}:
     main()
-
