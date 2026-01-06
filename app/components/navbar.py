@@ -2,16 +2,18 @@ from nicegui import ui
 from fastapi.responses import RedirectResponse
 from fastapi import Request
 
-from app.services.auth import get_current_user
-from app.services.users import get_len_panier, get_wallet_balance, get_user_from_id, get_user_info, get_in_progress_orders_count
-from app.services.settings import get_setting
-from app.translations.translations import t
+from services.auth import get_current_user
+from services.users import get_len_panier, get_wallet_balance, get_user_from_id, get_user_info, get_in_progress_orders_count
+from services.settings import get_setting
+from translations.translations import t
 
 
 def navbar(request: Request):
 
-    """Affiche une barre de navigation si l'utilisateur est connecté."""
+    """Affiche une barre de navigation si l'utilisateur est connecté. Utilisée pour les utilisateurs clients."""
 
+
+    # Création de class CSS pour gestion de l'affichage en fonction de la taille de l'écran
     ui.add_head_html("""
         <style>
         /* Cache la navigation complète sur les écrans petits */
@@ -27,16 +29,20 @@ def navbar(request: Request):
         """)
 
     lang_cookie = request.cookies.get("language", "fr")
-    distance_cookie = float(request.cookies.get("max_distance", "10"))
 
-    user_id = get_current_user()
+    # user_id = get_current_user()
+    
+    user_id = get_current_user(request)
     if user_id:
         user_info = get_user_info(user_id)
-    # user_id = get_current_user(request)
+
+
+    # === Contenu de la navbar ===
 
     with ui.header().classes('app-navbar items-center justify-between px-4 py-3 shadow-md'):
 
         with ui.row().classes('items-center gap-3'):
+
             # === Nom et logo ===
             site_name = get_setting("site_name")
             ui.button(f'🏥 {site_name}', on_click=lambda: ui.navigate.to('/home')) \
@@ -44,10 +50,10 @@ def navbar(request: Request):
                 .classes('nav-brand text-lg') \
                 .style('background: transparent; cursor: pointer;')
             
-            # === Avatar sur Mobile ===
-            if user_id and (user_info.get('is_confirmed', False) or user_info.get('is_admin', False)):
+            # === Avatar sur petit écran seulement ===
+            if user_id and (user_info.get('is_confirmed', False) or user_info.get('is_admin', False)):  # Seulement si l'utilisateur est confirmé ou admin
                 username = get_user_from_id(user_id)
-                with ui.row().classes('flex md:hidden items-center gap-3'):
+                with ui.row().classes('flex md:hidden items-center gap-3'):  # md:hidden -> cache sur écran large
                     ui.image(f"https://ui-avatars.com/api/?name={username}&background=34a853&color=fff&size=128") \
                         .classes('nav-avatar')
                     
@@ -56,7 +62,7 @@ def navbar(request: Request):
                     .classes('nav-username')
 
                 # === Admin panel ===
-                with ui.row().classes('items-center gap-3 desktop-nav'):
+                with ui.row().classes('items-center gap-3 desktop-nav'):  # desktop-nav: seulement sur écran large
                     if user_info.get('is_admin', False):
                         ui.button(t('admin_panel', lang_cookie), on_click=lambda: ui.navigate.to('/admin_panel')) \
                             .props("color='' unelevated") \
@@ -69,14 +75,15 @@ def navbar(request: Request):
         # === Zone utilisateur ===
         if user_id and (user_info.get('is_confirmed', False) or user_info.get('is_admin', False)):
             username = get_user_from_id(user_id)
-            with ui.row().classes('items-center gap-3 desktop-nav'):
+
+            # === Section écran large ===
+            with ui.row().classes('items-center gap-3 desktop-nav'):  # desktop-nav: seulement sur écran large
 
                 # === Avatar ===
                 ui.image(f"https://ui-avatars.com/api/?name={username}&background=34a853&color=fff&size=128") \
                     .classes('nav-avatar')
                 
                 # === Nom utilisateur ===
-                # ui.label(f"{t('connected', lang_cookie)} : {username}") \
                 ui.label(username) \
                     .props("color='' unelevated") \
                     .classes('nav-username')
@@ -111,65 +118,35 @@ def navbar(request: Request):
                 ui.button('', on_click=lambda: ui.navigate.to('/profile'), icon='person') \
                     .props("color='' unelevated") \
                     .classes('nav-profile')
-                
-                # === Paramètres ===
-                # === Filtre distance max ===
-                dialog_distance = ui.dialog()
-                with dialog_distance, ui.card().classes("p-6 w-80"):
-                    ui.label(t("max_dist", lang_cookie)).classes("text-xl font-bold mb-4")
-                    ui.label(t("max_dist_desc", lang_cookie))
-                    distance_input = ui.number("Distance maximale (km)", value=distance_cookie).props("outlined").classes("w-full mb-4")
-                    with ui.row().classes("justify-end gap-3"):
-                        ui.button(t("cancel", lang_cookie), on_click=dialog_distance.close)
-                        ui.button(
-                            t("save", lang_cookie),
-                            on_click=lambda: (
-                                ui.notify(f"{t('distance_set', lang_cookie)} {distance_input.value} {t('km', lang_cookie)}"),
-                                ui.run_javascript(
-                                    f'document.cookie = "max_distance={distance_input.value}; path=/; max-age={60*60*24*30}";'
-                                ),
-                                dialog_distance.close()
-                            )
-                        )
 
-                # === Choix de la langue ===
-                dialog_language = ui.dialog()
-                with dialog_language, ui.card().classes("p-6 w-80"):
-                    ui.label(t("lang_choice", lang_cookie)).classes("text-xl font-bold mb-4")
+                # === Bouton changer la langue ===
+                with ui.button(icon='language').props("color='' unelevated").classes('nav-btn nav-settings'):
+                    
                     language_dict = {"fr": "Français", "en": "English"}
-                    language_select = ui.select(language_dict, value=lang_cookie, label="Langue").classes("w-full mb-4")
-                    with ui.row().classes("justify-end gap-3"):
-                        ui.button(t("cancel", lang_cookie), on_click=dialog_language.close)
-                        ui.button(
-                            t("save", lang_cookie),
-                            on_click=lambda: (
-                                ui.notify(f"{t('lang_changed', lang_cookie)} {language_dict[language_select.value]}"),
-                                ui.run_javascript(
-                                    f'''
-                                    // Met à jour le cookie
-                                    document.cookie = "language={language_select.value}; path=/; max-age={60*60*24*30}";
-                                    // Recharge la page pour appliquer la langue
-                                    window.location.reload();
-                                    '''
-                                ),
-                                dialog_language.close()
-                            )
+
+                    def change_lang(lang):
+
+                        ui.run_javascript(
+                            f'''
+                            // Met à jour le cookie
+                            document.cookie = "language={lang}; path=/; max-age={60*60*24*30}";
+                            // Recharge la page pour appliquer la langue
+                            window.location.reload();
+                            '''
                         )
+                        ui.notify(f"{t('lang_changed', lang_cookie)} {language_dict[lang]}")
 
-                # === Bouton paramètres avec menu ===
-                with ui.button(icon='settings').props("color='' unelevated").classes('nav-btn nav-settings'):
                     with ui.menu() as menu:
-                        ui.menu_item(t("max_dist", lang_cookie), on_click=lambda: dialog_distance.open())
-                        ui.menu_item(t("lang_choice", lang_cookie), on_click=lambda: dialog_language.open())
-                        ui.menu_item(t("theme_toggle", lang_cookie), on_click=lambda: ui.notify("Basculer thème"))
-
+                        for lang, lang_label in language_dict.items():
+                            ui.menu_item(lang_label, on_click=lambda l=lang: change_lang(l))
 
                 # === Déconnexion ===
                 ui.button('', on_click=lambda: ui.navigate.to('/logout'), icon='logout') \
                     .props("color='' unelevated") \
                     .classes('nav-btn nav-danger')
                 
-            # === Section Mobile ===
+
+            # === Section petit écran (mobile) ===
             with ui.row().classes('flex md:hidden items-center gap-3'):
 
                 # === Wallet ===
@@ -203,13 +180,61 @@ def navbar(request: Request):
                     .props("color='' unelevated") \
                     .classes('nav-profile')
                 
+                # === Choix de la langue (popup appelée dans bouton paramètres) ===
+                dialog_language = ui.dialog()
+                with dialog_language, ui.card().classes("p-6 w-80"):
+                    ui.label(t("lang_choice", lang_cookie)).classes("text-xl font-bold mb-4")
+                    language_dict = {"fr": "Français", "en": "English"}
+
+                    language_select = ui.select(language_dict, value=lang_cookie, label="Langue").classes("w-full mb-4")
+                    with ui.row().classes("justify-end gap-3"):
+                        ui.button(t("cancel", lang_cookie), on_click=dialog_language.close)
+                        ui.button(
+                            t("save", lang_cookie),
+                            on_click=lambda: (
+                                ui.notify(f"{t('lang_changed', lang_cookie)} {language_dict[language_select.value]}"),
+                                ui.run_javascript(
+                                    f'''
+                                    // Met à jour le cookie
+                                    document.cookie = "language={language_select.value}; path=/; max-age={60*60*24*30}";
+                                    // Recharge la page pour appliquer la langue
+                                    window.location.reload();
+                                    '''
+                                ),
+                                dialog_language.close()
+                            )
+                        )
+                
                 # === Bouton paramètres avec menu ===
                 with ui.button(icon='settings').props("color='' unelevated").classes('nav-btn nav-settings'):
                     with ui.menu() as menu:
                         if user_info.get('is_admin', False):
+                            # Admin panel et switch livreur/client dans paramètres sur mobile
                             ui.menu_item(t('admin_panel', lang_cookie), on_click=lambda: ui.navigate.to('/admin_panel'))
                             ui.menu_item(t('view_delivery', lang_cookie), on_click=lambda: ui.navigate.to('/delivery/home'))
-                        ui.menu_item(t("max_dist", lang_cookie), on_click=lambda: dialog_distance.open())
                         ui.menu_item(t("lang_choice", lang_cookie), on_click=lambda: dialog_language.open())
-                        ui.menu_item(t("theme_toggle", lang_cookie), on_click=lambda: ui.notify(t("change_theme", lang_cookie)))
                         ui.menu_item(t('logout', lang_cookie), on_click=lambda: ui.navigate.to('/logout'))
+
+
+        # === Changer la langue même quand utilisateur pas défini (au login) ===
+        else:
+            with ui.row().classes('items-center gap-3'):
+                with ui.button(icon='language').props("color='' unelevated").classes('nav-btn nav-settings'):
+                        
+                        language_dict = {"fr": "Français", "en": "English"}
+
+                        def change_lang(lang):
+
+                            ui.run_javascript(
+                                f'''
+                                // Met à jour le cookie
+                                document.cookie = "language={lang}; path=/; max-age={60*60*24*30}";
+                                // Recharge la page pour appliquer la langue
+                                window.location.reload();
+                                '''
+                            )
+                            ui.notify(f"{t('lang_changed', lang_cookie)} {language_dict[lang]}")
+
+                        with ui.menu() as menu:
+                            for lang, lang_label in language_dict.items():
+                                ui.menu_item(lang_label, on_click=lambda l=lang: change_lang(l))

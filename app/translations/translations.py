@@ -1,4 +1,5 @@
-from app.services.file_io import load_json
+from services.file_io import load_json
+import html
 
 
 # Cache des traductions
@@ -26,4 +27,4 @@ def t(key: str, lang: str = "fr") -> str:
     if lang not in _translations:
         load_translations(lang)
 
-    return _translations.get(lang, {}).get(key, key)
+    return _translations.get(lang, {}).get(key, html.escape(key))

@@ -1,8 +1,6 @@
-from pathlib import Path
 from nicegui import ui, app
 
-STATIC_DIR = Path(__file__).resolve().parent.parent / 'static'
-app.add_static_files('/static', str(STATIC_DIR))
+app.add_static_files('/static', 'static')
 
 
 def apply_background():

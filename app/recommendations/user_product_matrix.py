@@ -3,11 +3,10 @@ import pandas as pd
 from pathlib import Path
 import re
 
-from app.services.users import get_panier
+from services.users import get_panier
 
 
-DATA_DIR = Path(__file__).resolve().parents[1] / 'data'
-DB_FILE = DATA_DIR / 'data.db'
+DB_FILE = Path("data/data.db")
 NEED_RECREATE = False
 
 

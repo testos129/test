@@ -4,21 +4,20 @@ from pathlib import Path
 from collections import Counter
 
 
-BASE_DIR = Path(__file__).resolve().parent
-
 # chemins des fichiers
-REVIEWS_FILE = BASE_DIR / "reviews.json"
-USERS_FILE = BASE_DIR / "users.json"
-PRODUCTS_FILE = BASE_DIR / "products.json"
-PHARMACIES_FILE = BASE_DIR / "pharmacies.json"
-USER_PRODUCT_FILE = BASE_DIR / "user_product_interactions.json"
-SETTINGS_FILE = BASE_DIR / "settings.json"
-DB_FILE = BASE_DIR / "data.db"
+REVIEWS_FILE = Path("data/reviews.json")
+USERS_FILE = Path("data/users.json")
+PRODUCTS_FILE = Path("data/products.json")
+PHARMACIES_FILE = Path("data/pharmacies.json")
+USER_PRODUCT_FILE = Path("data/user_product_interactions.json")
+SETTINGS_FILE = Path("data/settings.json")
+DB_FILE = Path("data/data.db")
 
 
 def init_db(conn):
 
     """Créer les tables SQLite si elles n'existent pas."""
+    
     cur = conn.cursor()
 
     # Table des commentaires
@@ -39,18 +38,41 @@ def init_db(conn):
 
     # Table des utilisateurs
     cur.execute("""
-    CREATE TABLE IF NOT EXISTS users (
+        CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE,
         password TEXT,
         email TEXT UNIQUE,
+
+        -- Statuts utilisateur
         is_delivery_person BOOLEAN DEFAULT 0,
         is_admin BOOLEAN DEFAULT 0,
         is_confirmed BOOLEAN DEFAULT 0,
         allow_comments BOOLEAN DEFAULT 1,
+
+        -- Vérification du compte
         confirmation_code TEXT,
         code_expiration_date DATETIME,
-        delivery_address TEXT        
+
+        -- Informations de contact
+        phone_number TEXT,
+
+        -- Adresse principale
+        main_address_street TEXT,
+        main_address_city TEXT,
+        main_address_postal_code TEXT,
+        main_address_details TEXT,
+
+        -- Adresse secondaire
+        secondary_address_street TEXT,
+        secondary_address_city TEXT,
+        secondary_address_postal_code TEXT,
+        secondary_address_details TEXT,
+                
+        -- Coordonnées utilisateur
+        current_lat REAL,
+        current_lng REAL,
+        current_coords_date DATETIME
     )
     """)
 
@@ -115,7 +137,12 @@ def init_db(conn):
         latitude REAL,
         longitude REAL,
         address TEXT,
+        address_details TEXT,
         delivery_person_id INTEGER,
+        order_code TEXT,
+        close_date TEXT,
+        user_notified BOOLEAN DEFAULT 0,
+        credited BOOLEAN DEFAULT 0,
         FOREIGN KEY(user_id) REFERENCES users(id),
         FOREIGN KEY(product_id) REFERENCES products(id)
     );
@@ -128,10 +155,13 @@ def init_db(conn):
         name TEXT NOT NULL,
         provider TEXT,
         image TEXT,
-        description TEXT,
-        reference TEXT,
+        description_fr TEXT,
+        description_en TEXT,
+        reference_fr TEXT,
+        reference_en TEXT,
         category TEXT,
-        age_group TEXT,        
+        age_group TEXT,  
+        estimated_price REAL,       
         allow_reviews BOOLEAN,
         display_price BOOLEAN,
         allow_order BOOLEAN,
@@ -225,8 +255,16 @@ def migrate_users(conn):
     for user_id, user_info in users_data.items():
         # 1. Insérer l'utilisateur
         cur.execute("""
-            INSERT OR IGNORE INTO users (id, username, password, email, is_delivery_person, is_admin, is_confirmed, allow_comments, confirmation_code, code_expiration_date, delivery_address)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT OR IGNORE INTO users (
+                id, username, password, email,
+                is_delivery_person, is_admin, is_confirmed, allow_comments,
+                confirmation_code, code_expiration_date,
+                phone_number,
+                main_address_street, main_address_city, main_address_postal_code, main_address_details,
+                secondary_address_street, secondary_address_city, secondary_address_postal_code, secondary_address_details,
+                current_lat, current_lng, current_coords_date
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(id) DO UPDATE SET
                 username = excluded.username,
                 password = excluded.password,
@@ -237,18 +275,42 @@ def migrate_users(conn):
                 allow_comments = excluded.allow_comments,
                 confirmation_code = excluded.confirmation_code,
                 code_expiration_date = excluded.code_expiration_date,
-                delivery_address = excluded.delivery_address
-        """, (user_id, 
-              user_info.get("name"), 
-              user_info.get("password"), 
-              user_info.get("email"),
-              user_info.get("is_delivery_person", False),
-              user_info.get("is_admin", False),
-              user_info.get("is_confirmed", False),
-              user_info.get("allow_comments", True),
-              user_info.get("confirmation_code", None),
-              user_info.get("code_expiration_date", None),
-              user_info.get("delivery_address", None)))
+                phone_number = excluded.phone_number,
+                main_address_street = excluded.main_address_street,
+                main_address_city = excluded.main_address_city,
+                main_address_postal_code = excluded.main_address_postal_code,
+                main_address_details = excluded.main_address_details,
+                secondary_address_street = excluded.secondary_address_street,
+                secondary_address_city = excluded.secondary_address_city,
+                secondary_address_postal_code = excluded.secondary_address_postal_code,
+                secondary_address_details = excluded.secondary_address_details,
+                current_lat = excluded.current_lat,
+                current_lng = excluded.current_lng,
+                current_coords_date = excluded.current_coords_date
+        """, (
+            user_id,
+            user_info.get("name"),
+            user_info.get("password"),
+            user_info.get("email"),
+            user_info.get("is_delivery_person", False),
+            user_info.get("is_admin", False),
+            user_info.get("is_confirmed", False),
+            user_info.get("allow_comments", True),
+            user_info.get("confirmation_code", None),
+            user_info.get("code_expiration_date", None),
+            user_info.get("phone_number", None),
+            user_info.get("main_address_street", None),
+            user_info.get("main_address_city", None),
+            user_info.get("main_address_postal_code", None),
+            user_info.get("main_address_details", None),
+            user_info.get("secondary_address_street", None),
+            user_info.get("secondary_address_city", None),
+            user_info.get("secondary_address_postal_code", None),
+            user_info.get("secondary_address_details", None),
+            user_info.get("current_lat", None),
+            user_info.get("current_lng", None),
+            user_info.get("current_coords_date", None)
+        ))
         conn.commit()
 
         # 2. Historique navigation
@@ -303,7 +365,12 @@ def migrate_users(conn):
                 latitude = item.get("latitude", None)
                 longitude = item.get("longitude", None)
                 address = item.get("address", None)
+                address_details = item.get("address_details", None)
                 delivery_person_id = item.get("delivery_person_id", None)
+                order_code = item.get("order_code", None)
+                close_date = item.get("close_date", None)
+                user_notified = item.get("user_notified", 0)
+                credited = item.get("credited", 0)
 
                 # Vérifier si une ligne existe déjà pour cet order_id + user_id + product_id
                 cur.execute("""
@@ -322,9 +389,29 @@ def migrate_users(conn):
                 else:
                     # Insertion sinon
                     cur.execute("""
-                        INSERT INTO orders (order_id, user_id, product_id, qty, total_price, pharmacy_id, date, status, latitude, longitude, address, delivery_person_id)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    """, (order_id, user_id, product_id, qty, total_price, pharmacy_id, date, status, latitude, longitude, address, delivery_person_id))
+                        INSERT INTO orders (
+                            order_id, user_id, product_id, qty, total_price, pharmacy_id, date, 
+                            status, latitude, longitude, address, address_details, delivery_person_id, order_code,
+                            close_date, user_notified, credited
+                        )
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """, (order_id, 
+                          user_id, 
+                          product_id, 
+                          qty, 
+                          total_price, 
+                          pharmacy_id, 
+                          date, 
+                          status, 
+                          latitude, 
+                          longitude, 
+                          address, 
+                          address_details, 
+                          delivery_person_id,
+                          order_code,
+                          close_date,
+                          user_notified,
+                          credited))
 
 
     conn.commit()
@@ -400,17 +487,20 @@ def migrate_products(conn):
         # Insertion produit
         cur.execute("""
             INSERT OR REPLACE INTO products
-            (id, name, provider, image, description, reference, category, age_group, allow_reviews, display_price, allow_order, display_recommendations, ordonnance)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (id, name, provider, image, description_fr, description_en, reference_fr, reference_en, category, age_group, estimated_price, allow_reviews, display_price, allow_order, display_recommendations, ordonnance)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             int(product_id),
             product.get("name"),
             product.get("provider"),
             product.get("image"),
-            product.get("description"),
-            product.get("reference"),
+            product.get("description_fr"),
+            product.get("description_en"),
+            product.get("reference_fr"),
+            product.get("reference_en"),
             product.get("category"),
             product.get("age_group"),
+            product.get("estimated_price"),
             product.get("allow_reviews", True),
             product.get("display_price", True),
             product.get("allow_order", True),
@@ -429,8 +519,6 @@ def migrate_products(conn):
                 VALUES (?, ?)
             """, (product_id, comp))
 
-            # ON CONFLICT(product_id, component) DO NOTHING
-
         # Insertion tags
         for tag in product.get("tags", []):
             cur.execute("""
@@ -438,7 +526,6 @@ def migrate_products(conn):
                 VALUES (?, ?)
             """, (product_id, tag))
 
-            # ON CONFLICT(product_id, tag) DO NOTHING
 
     conn.commit()
     print(f"✅ {len(products_data)} produits migrés.")

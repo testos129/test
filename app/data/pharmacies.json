@@ -9,7 +9,7 @@
     "available_products": {
       "1": {
         "price": 4.7,
-        "qty": 43
+        "qty": 34
       },
       "5": {
         "price": 6.8,
@@ -140,7 +140,7 @@
     "available_products": {
       "2": {
         "price": 5.1,
-        "qty": 52
+        "qty": 51
       },
       "4": {
         "price": 4.9,
@@ -1204,7 +1204,7 @@
       },
       "9": {
         "price": 6.3,
-        "qty": 43
+        "qty": 42
       },
       "10": {
         "price": 4.7,

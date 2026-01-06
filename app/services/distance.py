@@ -1,4 +1,21 @@
 import math
+import datetime
+import holidays
+
+
+def distance_by_day():
+
+    """Retourne le seuil de distance en fonction du jour"""
+
+    today = datetime.date.today()
+    french_holidays = holidays.France()
+
+    # Vérifie si c'est un jour férié ou un week-end
+    if today in french_holidays or today.weekday() >= 5:  # 5 = samedi, 6 = dimanche
+        return 5
+    else:
+        return 2
+
 
 def haversine_dist(lat1: float, lon1: float, lat2: float, lon2: float):
 
@@ -13,7 +30,7 @@ def haversine_dist(lat1: float, lon1: float, lat2: float, lon2: float):
     return 2 * R * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
 
-def optimize_route(start_lat, start_lng, pharmacies, end_lat=None, end_lng=None):
+def optimize_route(start_lat, start_lng, pharmacies, end_lat=None, end_lng=None, message_dest = ""):
 
     """Retourne une liste ordonnée de pharmacies pour minimiser la distance totale parcourue"""
 
@@ -28,6 +45,6 @@ def optimize_route(start_lat, start_lng, pharmacies, end_lat=None, end_lng=None)
         current = next_ph
 
     if end_lat is not None and end_lng is not None:
-        ordered.append({"lat": end_lat, "lng": end_lng, "name": "Destination finale"})
+        ordered.append({"lat": end_lat, "lng": end_lng, "name": message_dest})
 
     return ordered

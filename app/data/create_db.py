@@ -29,20 +29,44 @@ def init_db(conn):
 
     # Table des utilisateurs
     cur.execute("""
-    CREATE TABLE IF NOT EXISTS users (
+        CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE,
         password TEXT,
         email TEXT UNIQUE,
+
+        -- Statuts utilisateur
         is_delivery_person BOOLEAN DEFAULT 0,
         is_admin BOOLEAN DEFAULT 0,
         is_confirmed BOOLEAN DEFAULT 0,
         allow_comments BOOLEAN DEFAULT 1,
+
+        -- Vérification du compte
         confirmation_code TEXT,
         code_expiration_date DATETIME,
-        delivery_address TEXT
+
+        -- Informations de contact
+        phone_number TEXT,
+
+        -- Adresse principale
+        main_address_street TEXT,
+        main_address_city TEXT,
+        main_address_postal_code TEXT,
+        main_address_details TEXT,
+
+        -- Adresse secondaire
+        secondary_address_street TEXT,
+        secondary_address_city TEXT,
+        secondary_address_postal_code TEXT,
+        secondary_address_details TEXT,
+                
+        -- Coordonnées utilisateur
+        current_lat REAL,
+        current_lng REAL,
+        current_coords_date DATETIME
     )
     """)
+
 
     # Table de l'historique des utilisateurs
     cur.execute("""
@@ -101,11 +125,16 @@ def init_db(conn):
         total_price REAL NOT NULL,
         pharmacy_id INTEGER,
         date TEXT NOT NULL,
-        status TEXT NOT NULL,
+        status TEXT NOT NULL,  -- completed, in_progress, pending
         latitude REAL,
         longitude REAL,
         address TEXT,
+        address_details TEXT,
         delivery_person_id INTEGER,
+        order_code TEXT,
+        close_date TEXT,
+        user_notified BOOLEAN DEFAULT 0,
+        credited BOOLEAN DEFAULT 0,
         FOREIGN KEY(user_id) REFERENCES users(id),
         FOREIGN KEY(product_id) REFERENCES products(id)
     );
@@ -118,10 +147,13 @@ def init_db(conn):
         name TEXT NOT NULL,
         provider TEXT,
         image TEXT,
-        description TEXT,
-        reference TEXT,
+        description_fr TEXT,
+        description_en TEXT,
+        reference_fr TEXT,
+        reference_en TEXT,
         category TEXT,
-        age_group TEXT,        
+        age_group TEXT,    
+        estimated_price REAL,    
         allow_reviews BOOLEAN,
         display_price BOOLEAN,
         allow_order BOOLEAN,

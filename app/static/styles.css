@@ -600,6 +600,22 @@ body.theme-product .similar-card h3 {
 }
 .admin-action--gray:hover { background-color: #4b5563 !important; transform: translateY(-3px); }
 
+/* Red */
+.admin-action--red {
+  background-color: #EF4444 !important; /* red-500 */
+  color: #ffffff !important;
+  border-color: rgba(153, 27, 27, 0.10) !important;
+}
+.admin-action--red:hover { background-color: #DC2626 !important; transform: translateY(-3px); }
+
+/* Yellow */
+.admin-action--yellow {
+  background-color: #FACC15 !important; /* yellow-400 */
+  color: #000000 !important; /* texte en noir pour contraste */
+  border-color: rgba(133, 100, 4, 0.12) !important;
+}
+.admin-action--yellow:hover { background-color: #EAB308 !important; transform: translateY(-3px); }
+
 /* Bouton "Retour à l'accueil" */
 .btn-return-home {
   background-color: #1565c0 !important; /* Bleu principal */

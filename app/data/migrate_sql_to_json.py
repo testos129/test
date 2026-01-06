@@ -2,16 +2,14 @@ import sqlite3
 import json
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent
-
 # fichiers de sortie
-USERS_FILE = BASE_DIR / "users.json"
-REVIEWS_FILE = BASE_DIR / "reviews.json"
-PRODUCTS_FILE = BASE_DIR / "products.json"
-PHARMACIES_FILE = BASE_DIR / "pharmacies.json"
-USER_PRODUCT_FILE = BASE_DIR / "user_product_interactions.json"
-SETTINGS_FILE = BASE_DIR / "settings.json"
-DB_FILE = BASE_DIR / "data.db"
+USERS_FILE = Path("data/users.json")
+REVIEWS_FILE = Path("data/reviews.json")
+PRODUCTS_FILE = Path("data/products.json")
+PHARMACIES_FILE = Path("data/pharmacies.json")
+USER_PRODUCT_FILE = Path("data/user_product_interactions.json")
+SETTINGS_FILE = Path("data/settings.json")
+DB_FILE = Path("data/data.db")
 
 
 def export_users(conn):
@@ -23,8 +21,28 @@ def export_users(conn):
     users_dict = {}
 
     # récupérer tous les utilisateurs
-    cur.execute("SELECT id, username, password, email, is_delivery_person, is_admin, is_confirmed, allow_comments, confirmation_code, code_expiration_date, delivery_address FROM users")
-    for user_id, username, password, email, is_delivery_person, is_admin, is_confirmed, allow_comments, confirmation_code, code_expiration_date, delivery_address in cur.fetchall():
+    cur.execute("""
+        SELECT
+            id, username, password, email,
+            is_delivery_person, is_admin, is_confirmed, allow_comments,
+            confirmation_code, code_expiration_date,
+            phone_number,
+            main_address_street, main_address_city, main_address_postal_code, main_address_details,
+            secondary_address_street, secondary_address_city, secondary_address_postal_code, secondary_address_details,
+            current_lat, current_lng, current_coords_date
+        FROM users
+    """)
+
+    for (
+        user_id, username, password, email,
+        is_delivery_person, is_admin, is_confirmed, allow_comments,
+        confirmation_code, code_expiration_date,
+        phone_number,
+        main_address_street, main_address_city, main_address_postal_code, main_address_details,
+        secondary_address_street, secondary_address_city, secondary_address_postal_code, secondary_address_details,
+        current_lat, current_lng, current_coords_date
+    ) in cur.fetchall():
+
         user_info = {
             "name": username,
             "password": password,
@@ -35,7 +53,18 @@ def export_users(conn):
             "allow_comments": allow_comments,
             "confirmation_code": confirmation_code,
             "code_expiration_date": code_expiration_date,
-            "delivery_address": delivery_address,
+            "phone_number": phone_number,
+            "main_address_street": main_address_street,
+            "main_address_city": main_address_city,
+            "main_address_postal_code": main_address_postal_code,
+            "main_address_details": main_address_details,
+            "secondary_address_street": secondary_address_street,
+            "secondary_address_city": secondary_address_city,
+            "secondary_address_postal_code": secondary_address_postal_code,
+            "secondary_address_details": secondary_address_details,
+            "current_lat": current_lat,
+            "current_lng": current_lng,
+            "current_coords_date": current_coords_date,
             "history": {},
             "panier": {},
             "wallet_data": {"balance": 0.0, "history": []},
@@ -67,14 +96,21 @@ def export_users(conn):
 
         # commandes / orders
         cur.execute("""
-            SELECT order_id, product_id, qty, total_price, date, pharmacy_id, status, latitude, longitude, address, delivery_person_id
+            SELECT order_id, product_id, qty, total_price, date, pharmacy_id, status, latitude, longitude,
+                   address, address_details, delivery_person_id, order_code, close_date, user_notified, credited
             FROM orders
             WHERE user_id = ?
             ORDER BY order_id
         """, (user_id,))
-        for order_id, product_id, qty, total_price, date, pharmacy_id, status, latitude, longitude, address, delivery_person_id in cur.fetchall():
+
+        for (order_id, product_id, qty, total_price, date, pharmacy_id, status, 
+             latitude, longitude, address, address_details, delivery_person_id, order_code, 
+             close_date, user_notified, credited
+        ) in cur.fetchall():
+            
             if order_id not in user_info["orders"]:
                 user_info["orders"][order_id] = []
+                
             user_info["orders"][order_id].append({
                 "product_id": product_id,
                 "qty": qty,
@@ -85,7 +121,12 @@ def export_users(conn):
                 "latitude": latitude,
                 "longitude": longitude,
                 "address": address,
-                "delivery_person_id": delivery_person_id
+                "address_details": address_details,
+                "delivery_person_id": delivery_person_id,
+                "order_code": order_code,
+                "close_date": close_date,
+                "user_notified": user_notified,
+                "credited": credited
             })
 
         users_dict[user_id] = user_info
@@ -139,20 +180,23 @@ def export_products(conn):
 
     # récupérer tous les produits
     cur.execute("""
-        SELECT id, name, provider, image, description, reference, category, age_group, allow_reviews, display_price, allow_order, display_recommendations, ordonnance
+        SELECT id, name, provider, image, description_fr, description_en, reference_fr, reference_en, category, age_group, estimated_price, allow_reviews, display_price, allow_order, display_recommendations, ordonnance
         FROM products
     """)
-    for product_id, name, provider, image, description, reference, category, age_group, allow_reviews, display_price, allow_order, display_recommendations, ordonnance in cur.fetchall():
+    for product_id, name, provider, image, description_fr, description_en, reference_fr, reference_en, category, age_group, estimated_price, allow_reviews, display_price, allow_order, display_recommendations, ordonnance in cur.fetchall():
         product_info = {
             "name": name,
             "provider": provider,
             "image": image,
-            "description": description,
-            "reference": reference,
+            "description_fr": description_fr,
+            "description_en": description_en,
+            "reference_fr": reference_fr,
+            "reference_en": reference_en,
             "component": [],
             "tags": [],
             "category": category,
             "age_group": age_group,
+            "estimated_price": estimated_price,
             "allow_reviews": bool(allow_reviews),
             "display_price": bool(display_price),
             "allow_order": bool(allow_order),

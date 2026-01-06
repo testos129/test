@@ -3,11 +3,13 @@ from fastapi.responses import RedirectResponse
 from fastapi import Request
 from datetime import datetime
 
-from app.services.auth import get_current_user, sessions
-from app.components.navbar import navbar
-from app.components.theme import apply_background
-from app.services.users import get_user_info, delete_user, get_connection
-from app.translations.translations import t
+from services.auth import get_current_user
+from components.navbar import navbar
+from components.footer import footer_bar
+from components.theme import apply_background
+from services.users import get_user_info, delete_user, get_connection
+from services.logging_setup import get_logger
+from translations.translations import t
 
 
 @ui.page('/admin/users')
@@ -18,26 +20,29 @@ def admin_users(request: Request):
     # === Setup initial ===
 
     # Récupération de l'utilisateur et application du style global, de la barre de navigation et des cookies
-    if not get_current_user():
+    
+    user_id = get_current_user(request)
+    if not user_id:
+        host = request.client.host
+        logger_default = get_logger('default')
+        logger_default.info(f"Access denied for admin page users: no valid token, ip: {host}")
         return RedirectResponse('/')
 
-    token = app.storage.browser.get('token')
-    user_id = sessions[token]
-
-    # user_id = get_current_user(request)
-    # if not user_id:
-    #     return RedirectResponse('/')
-    
     # Vérification des droits admin
     user_info = get_user_info(user_id)
     if not user_info.get('is_admin', False):
+        logger_user = get_logger('nav')
+        logger_user.info(f"Tried to open users management page but was denied", extra={"user_id": user_id})
         return RedirectResponse('/home')
     
     apply_background()
     navbar(request)
+    footer_bar(request)
+
+    logger = get_logger('admin')
+    logger.info("Users management page consulted", extra={"admin_user_id": user_id})
 
     lang_cookie = request.cookies.get("language", "fr")
-    distance_cookie = float(request.cookies.get("max_distance", "10"))
 
     state = {
         "page": 0,
@@ -137,23 +142,23 @@ def admin_users(request: Request):
         state["page"] += delta
         load_users()
 
-    def edit_user(user_id: int):
+    def edit_user(uid: int):
 
         """Charge le formulaire d'édition pour un utilisateur donné."""
 
-        state['selected_user'] = user_id
+        state['selected_user'] = uid
         form_container.clear()
 
         with get_connection() as conn:
             cur = conn.cursor()
             cur.execute(
                 "SELECT id, username, email, is_delivery_person, is_admin, is_confirmed, allow_comments FROM users WHERE id = ?",
-                (user_id,),
+                (uid,),
             )
             user = cur.fetchone()
 
             # Récupérer le wallet
-            cur.execute("SELECT balance FROM wallets WHERE user_id = ?", (user_id,))
+            cur.execute("SELECT balance FROM wallets WHERE user_id = ?", (uid,))
             wallet_row = cur.fetchone()
             wallet_balance = wallet_row[0] if wallet_row else 0.0
 
@@ -177,6 +182,7 @@ def admin_users(request: Request):
 
             wallet_input = ui.input(t("wallet_amount", lang_cookie), value=f"{wallet_balance:.2f}").classes("w-full").props("type=number step=1 min=0")
 
+            # === Boutons Save / Delete ===
             def save():
 
                 """Sauvegarde les modifications apportées à l'utilisateur."""
@@ -186,7 +192,8 @@ def admin_users(request: Request):
                     if wallet_value < 0:
                         ui.notify(t("negative_wallet_amount", lang_cookie), color="negative")
                         return
-                except ValueError:
+                except ValueError as e:
+                    logger.warning(f"Error computing new wallet amount: {e}", extra={"admin_user_id": user_id})
                     ui.notify(t("invalid_wallet_amount", lang_cookie), color="negative")
                     return
                 
@@ -206,6 +213,9 @@ def admin_users(request: Request):
                     ))
 
                     wallet_update_amount = float(wallet_input.value) - wallet_balance
+                    
+                    if wallet_update_amount:
+                        logger.info(f"Wallet for user: {uid} updated: {wallet_balance} -> {wallet_input.value}", extra={"admin_user_id": user_id})
 
                     # Mettre à jour ou créer le wallet
                     cur.execute("SELECT id FROM wallets WHERE user_id = ?", (uid,))
@@ -223,7 +233,8 @@ def admin_users(request: Request):
                     )
 
                     conn.commit()
-
+                
+                logger.info(f"User: {uid} updated", extra={"admin_user_id": user_id})
                 ui.notify(t("user_updated", lang_cookie), color="positive")
                 load_users()
                 edit_user(uid)  # recharge le form avec valeurs actualisées
@@ -249,10 +260,12 @@ def admin_users(request: Request):
                     """Effectue la suppression de l'utilisateur après confirmation."""
                     
                     if delete_user(uid):
+                        logger.info(f"User: {uid} deleted, last balance: {wallet_balance}", extra={"admin_user_id": user_id})
                         ui.notify(t("user_deleted", lang_cookie), color="warning")
                         form_container.clear()
                         load_users()
                     else:
+                        logger.info(f"Error trying to deleted user: {user_id}", extra={"admin_user_id": user_id})
                         ui.notify(t("impossible_deletion_user", lang_cookie), color="negative")
 
                 # Confirmation popup

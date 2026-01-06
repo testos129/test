@@ -7,11 +7,13 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 import io
 
-from app.services.auth import get_current_user, sessions
-from app.services.users import get_user_info, get_last_order
-from app.components.navbar import navbar
-from app.components.theme import apply_background
-from app.translations.translations import t
+from services.auth import get_current_user
+from services.users import get_user_info, get_last_order
+from components.navbar import navbar
+from components.footer import footer_bar
+from components.theme import apply_background
+from services.logging_setup import get_logger
+from translations.translations import t
 
 
 @app.get("/generate_last_order_pdf")
@@ -19,11 +21,13 @@ def generate_last_order_pdf(request: Request):
 
     """Génère un PDF récapitulatif de la dernière commande de l'utilisateur."""
 
-    token = app.storage.browser.get('token')
-    if not token or token not in sessions:
+    user_id = get_current_user(request)
+    if not user_id:
+        host = request.client.host
+        logger_default = get_logger('default')
+        logger_default.info(f"Access denied for api generate order pdf: no valid token, ip: {host}")
         return RedirectResponse('/')
 
-    user_id = sessions[token]
     user_info = get_user_info(user_id)
     lang_cookie = request.cookies.get("language", "fr")
 
@@ -43,6 +47,11 @@ def generate_last_order_pdf(request: Request):
     elements.append(Paragraph(f"{t('email_2', lang_cookie)}{user_info['email']}", styles["Normal"]))
     elements.append(Spacer(1, 12))
     elements.append(Paragraph(f"{t('order_date', lang_cookie)}{last_order['date']}", styles["Normal"]))
+    if last_order['address']:
+        elements.append(Paragraph(f"{t('order_address', lang_cookie)}{last_order['address']}", styles["Normal"]))
+        if last_order['address_details']:  # Seulement quand on a déjà l'adresse renseignée
+            elements.append(Paragraph(f"{t('order_address_details', lang_cookie)}{last_order['address_details']}", styles["Normal"]))
+    elements.append(Spacer(1, 12))
     elements.append(Paragraph(f"{t('delivery_fees', lang_cookie)}{last_order['delivery_cost']:.2f} €", styles["Normal"]))
     elements.append(Paragraph(f"{t('Total payé : ', lang_cookie)}{last_order['total']:.2f} €", styles["Normal"]))
     elements.append(Spacer(1, 20))
@@ -63,6 +72,9 @@ def generate_last_order_pdf(request: Request):
     doc.build(elements)
     buffer.seek(0)
 
+    logger = get_logger('nav')
+    logger.info(f"Order pdf recap generated for order: {last_order['order_id']}", extra={"user_id": user_id})
+
     # Utilisation de StreamingResponse pour envoyer un flux mémoire
     return StreamingResponse(
         buffer,
@@ -79,26 +91,33 @@ def thanks(request: Request):
     """Page de remerciement après une commande réussie."""
 
     # Récupération de l'utilisateur et application du style global, de la barre de navigation et des cookies
-    if not get_current_user():
+    user_id = get_current_user(request)
+    if not user_id:
+        host = request.client.host
+        logger_default = get_logger('default')
+        logger_default.info(f"Access denied for page thanks: no valid token, ip: {host}")
         return RedirectResponse('/')
-
-    token = app.storage.browser.get('token')
-    user_id = sessions[token]
+    
+    logger = get_logger('nav')
     
     user_info = get_user_info(user_id)
     if not user_info.get('is_confirmed', False) and not user_info.get('is_admin', False):  # utilisateur non confirmé et non admin
+        logger.info("Access denied for page thanks: not confirmed", extra={"user_id": user_id})
         return RedirectResponse('/')
     
     apply_background()
     navbar(request)
+    footer_bar(request)
 
-    lang_cookie = request.cookies.get("language", "fr")
-    distance_cookie = float(request.cookies.get("max_distance", "10"))
-    
+    lang_cookie = request.cookies.get("language", "fr")    
     
     # === Contenu de la page ===
+
     with ui.column().classes('items-center w-full max-w-3xl mx-auto p-4 gap-4'):
+        last_order = get_last_order(user_id)
+
         ui.label(t("thanks_order", lang_cookie)).classes('text-3xl font-bold text-center mt-4')
+        ui.label(t("order_number", lang_cookie) + str(last_order['order_id'])).classes('text-xl font-bold text-center mt-4')
         ui.label(t("order_registered", lang_cookie)).classes('text-gray-700 text-center')
 
         ui.button(t("return_home_2", lang_cookie), on_click=lambda: ui.navigate.to('/home')) \

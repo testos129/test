@@ -4,12 +4,14 @@ import os
 from pathlib import Path
 from fastapi import Request
 
-from app.services.auth import get_current_user, sessions
-from app.components.navbar import navbar
-from app.components.theme import apply_background
-from app.services.users import get_user_info, get_connection
-from app.services.items import delete_product
-from app.translations.translations import t
+from services.auth import get_current_user
+from components.navbar import navbar
+from components.footer import footer_bar
+from components.theme import apply_background
+from services.users import get_user_info, get_connection
+from services.items import delete_product, get_filter_options
+from services.logging_setup import get_logger
+from translations.translations import t
 
 IMAGES_DIR = Path("data/images")
 IMAGES_DIR.mkdir(parents=True, exist_ok=True)
@@ -23,22 +25,28 @@ def admin_products(request: Request):
     # === Setup initial ===
 
     # Récupération de l'utilisateur et application du style global, de la barre de navigation et des cookies
-    if not get_current_user():
+    user_id = get_current_user(request)
+    if not user_id:
+        host = request.client.host
+        logger_default = get_logger('default')
+        logger_default.info(f"Access denied for admin page products: no valid token, ip: {host}")
         return RedirectResponse('/')
-
-    token = app.storage.browser.get('token')
-    user_id = sessions[token]
     
     # Vérification des droits admin
     user_info = get_user_info(user_id)
     if not user_info.get('is_admin', False):
+        logger_user = get_logger('nav')
+        logger_user.info(f"Tried to open products management page but was denied", extra={"user_id": user_id})
         return RedirectResponse('/home')
     
     apply_background()
     navbar(request)
+    footer_bar(request)
+
+    logger = get_logger('admin')
+    logger.info("Products management page consulted", extra={"admin_user_id": user_id})
 
     lang_cookie = request.cookies.get("language", "fr")
-    distance_cookie = float(request.cookies.get("max_distance", "10"))
 
     state = {
         "page": 0,
@@ -92,10 +100,10 @@ def admin_products(request: Request):
         with get_connection() as conn:
             cur = conn.cursor()
             query = """
-                SELECT id, name, provider, image, description, reference, category, age_group,
-                       allow_reviews, display_price, allow_order, display_recommendations, ordonnance
+                SELECT id, name, provider, image, description_fr, description_en, reference_fr, reference_en, category, age_group,
+                       estimated_price, allow_reviews, display_price, allow_order, display_recommendations, ordonnance
                 FROM products
-                WHERE name LIKE ? OR reference LIKE ? OR category LIKE ?
+                WHERE name LIKE ? OR reference_fr LIKE ? OR category LIKE ?
                 LIMIT 5 OFFSET ?
             """
             cur.execute(
@@ -110,7 +118,7 @@ def admin_products(request: Request):
             products = cur.fetchall()
 
         for product in products:
-            pid, name, provider, image, description, reference, category, age_group, allow_reviews, display_price, allow_order, display_recommendations, ordonnance = product
+            pid, name, provider, image, description_fr, description_en, reference_fr, reference_en, category, age_group, estimated_price, allow_reviews, display_price, allow_order, display_recommendations, ordonnance = product
             with products_container:
                 with ui.card().classes(
                     'w-full p-4 cursor-pointer hover:shadow-lg rounded-lg bg-white transition-all duration-200 hover:scale-[1.01]'
@@ -154,8 +162,8 @@ def admin_products(request: Request):
             with get_connection() as conn:
                 cur = conn.cursor()
                 cur.execute("""
-                    SELECT id, name, provider, image, description, reference, category, age_group,
-                        allow_reviews, display_price, allow_order, display_recommendations, ordonnance
+                    SELECT id, name, provider, image, description_fr, description_en, reference_fr, reference_en, category, age_group,
+                           estimated_price, allow_reviews, display_price, allow_order, display_recommendations, ordonnance
                     FROM products WHERE id = ?
                 """, (product_id,))
                 product = cur.fetchone()
@@ -172,10 +180,10 @@ def admin_products(request: Request):
                 tags = cur.fetchall()
 
         if product:
-            pid, pname, pprovider, pimage, pdesc, pref, pcat, page, arev, dprice, aorder, dreco, ordon = product
+            pid, pname, pprovider, pimage, pdesc_fr, pdesc_en, pref_fr, pref_en, pcat, page, eprice, arev, dprice, aorder, dreco, ordon = product
         else:
-            pid, pname, pprovider, pimage, pdesc, pref, pcat, page, arev, dprice, aorder, dreco, ordon = \
-                (None, "", "", None, "", "", "", "", 0, 0, 0, 0, 0)
+            pid, pname, pprovider, pimage, pdesc_fr, pdesc_en, pref_fr, pref_en, pcat, page, eprice, arev, dprice, aorder, dreco, ordon = \
+                (None, "", "", None, "", "", "", "", "", "", 0, 0, 0, 0, 0, 0)
 
         # Construction du formulaire
         with form_container:
@@ -187,10 +195,24 @@ def admin_products(request: Request):
                 name_input.props("readonly")
 
             provider_input = ui.input(t("provider_2", lang_cookie), value=pprovider).classes("w-full")
-            description_input = ui.textarea(t("description", lang_cookie), value=pdesc).classes("w-full")
-            reference_input = ui.input(t("reference", lang_cookie), value=pref).classes("w-full")
-            category_input = ui.input(t("category_2", lang_cookie), value=pcat).classes("w-full")
-            age_group_input = ui.input(t("age_group", lang_cookie), value=page).classes("w-full")
+            description_fr_input = ui.textarea(t("description_fr", lang_cookie), value=pdesc_fr).classes("w-full")
+            description_en_input = ui.textarea(t("description_en", lang_cookie), value=pdesc_en).classes("w-full")
+            reference_fr_input = ui.input(t("reference_fr", lang_cookie), value=pref_fr).classes("w-full")
+            reference_en_input = ui.input(t("reference_en", lang_cookie), value=pref_en).classes("w-full")
+            cats_list = [cat[0] for cat in get_filter_options('category')]
+            if pcat in cats_list:
+                category_input = ui.select(cats_list, value=pcat, label=t("category_2", lang_cookie)).classes("w-full")
+            else:
+                category_input = ui.select(cats_list, label=t("category_2", lang_cookie)).classes("w-full")
+            # category_input = ui.input(t("category_2", lang_cookie), value=pcat).classes("w-full")
+            ages_list = [age[0] for age in get_filter_options('age_group')]
+            if page in ages_list:
+                age_group_input = ui.select(ages_list, value=page, label=t("age_group", lang_cookie)).classes("w-full")
+            else:
+                age_group_input = ui.select(ages_list, label=t("age_group", lang_cookie)).classes("w-full")
+
+            # age_group_input = ui.input(t("age_group", lang_cookie), value=page).classes("w-full")
+            estimated_price_input = ui.input(t("estimated_price", lang_cookie), value=eprice).props('type=number min=0 step=0.01').classes("w-full")
 
             allow_reviews = ui.checkbox(t("allow_review", lang_cookie), value=bool(arev))
             display_price = ui.checkbox(t("display_price", lang_cookie), value=bool(dprice))
@@ -212,19 +234,18 @@ def admin_products(request: Request):
 
                 file = e.content
                 filename = f"{name_input.value}.webp" if name_input.value else e.name
-                if not filename.endswith(".webp"):
-                    ui.notify(t("non_valid_image_format", lang_cookie), color="negative")
-                    return
 
                 save_path = IMAGES_DIR / filename
                 with open(save_path, "wb") as f:
                     f.write(file.read())
 
                 uploaded_image_path["value"] = str(save_path)
+
+                logger.info(f"Saved image for product {pid} in {save_path}", extra={"admin_user_id": user_id})
                 ui.notify(t("image_saved", lang_cookie), color="positive")
 
             ui.upload(on_upload=handle_upload, auto_upload=True, max_file_size=5_000_000) \
-                .props('accept=".webp"') \
+                .props('accept=".webp" accept=".jpg" accept=".png", accept=".jpeg"') \
                 .classes("border p-4 rounded-lg w-full")
 
             # === Sections Composants ===
@@ -258,6 +279,8 @@ def admin_products(request: Request):
                                 cur = conn.cursor()
                                 cur.execute("INSERT INTO product_components (product_id, component) VALUES (?, ?)", (pid, comp_input.value.strip()))
                                 conn.commit()
+                            
+                            logger.info(f"Component {comp_input.value.strip()} added for product {pid}", extra={"admin_user_id": user_id})
                             ui.notify(t("component_added", lang_cookie), color="positive")
                             dialog.close()
                             load_components()
@@ -277,6 +300,8 @@ def admin_products(request: Request):
                         cur = conn.cursor()
                         cur.execute("DELETE FROM product_components WHERE id = ?", (cid,))
                         conn.commit()
+                    
+                    logger.info(f"Component {cid} deleted for product {pid}", extra={"admin_user_id": user_id})
                     ui.notify(t("component_deleted", lang_cookie), color="warning")
                     load_components()
 
@@ -314,6 +339,8 @@ def admin_products(request: Request):
                                 cur = conn.cursor()
                                 cur.execute("INSERT INTO product_tags (product_id, tag) VALUES (?, ?)", (pid, tag_input.value.strip()))
                                 conn.commit()
+
+                            logger.info(f"Tag {tag_input.value.strip()} added for product {pid}", extra={"admin_user_id": user_id})
                             ui.notify(t("tag_added", lang_cookie), color="positive")
                             dialog.close()
                             load_tags()
@@ -333,6 +360,8 @@ def admin_products(request: Request):
                         cur = conn.cursor()
                         cur.execute("DELETE FROM product_tags WHERE id = ?", (tid,))
                         conn.commit()
+
+                    logger.info(f"Tag {tid} deleted for product {pid}", extra={"admin_user_id": user_id})
                     ui.notify(t("tag_deleted", lang_cookie), color="warning")
                     load_tags()
 
@@ -351,10 +380,13 @@ def admin_products(request: Request):
                         "Nom du produit": name_input.value,
                         "Fournisseur": provider_input.value,
                         "Image": uploaded_image_path["value"],
-                        "Description": description_input.value,
-                        "Référence": reference_input.value,
+                        "Description_fr": description_fr_input.value,
+                        "Description_en": description_en_input.value,
+                        "Référence_fr": reference_fr_input.value,
+                        "Référence_en": reference_en_input.value,
                         "Catégorie": category_input.value,
                         "Groupe d'âge": age_group_input.value,
+                        "Prix estimé": estimated_price_input.value,
                     }
 
                     for label, value in required_fields.items():
@@ -371,17 +403,20 @@ def admin_products(request: Request):
 
                         cur.execute("""
                             INSERT INTO products (
-                                name, provider, image, description, reference, category, age_group,
-                                allow_reviews, display_price, allow_order, display_recommendations, ordonnance
-                            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                name, provider, image, description_fr, description_en, reference_fr, reference_en, category, age_group,
+                                estimated_price, allow_reviews, display_price, allow_order, display_recommendations, ordonnance
+                            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                         """, (
                             name_input.value,
                             provider_input.value,
                             uploaded_image_path["value"],
-                            description_input.value,
-                            reference_input.value,
+                            description_fr_input.value,
+                            description_en_input.value,
+                            reference_fr_input.value,
+                            reference_en_input.value,
                             category_input.value,
                             age_group_input.value,
+                            float(estimated_price_input.value) if estimated_price_input.value else None,
                             int(allow_reviews.value),
                             int(display_price.value),
                             int(allow_order.value),
@@ -389,6 +424,8 @@ def admin_products(request: Request):
                             int(ordonnance.value),
                         ))
                         conn.commit()
+                    
+                    logger.info(f"Product added: {name_input.value}", extra={"admin_user_id": user_id})
                     ui.notify(t("product_added", lang_cookie), color="positive")
 
                 else:  # mode edit
@@ -396,16 +433,19 @@ def admin_products(request: Request):
                         cur = conn.cursor()
                         cur.execute("""
                             UPDATE products
-                            SET provider=?, image=?, description=?, reference=?, category=?, age_group=?,
-                                allow_reviews=?, display_price=?, allow_order=?, display_recommendations=?, ordonnance=?
+                            SET provider=?, image=?, description_fr=?, description_en=?, reference_fr=?, reference_en=?, category=?, age_group=?,
+                                estimated_price=?, allow_reviews=?, display_price=?, allow_order=?, display_recommendations=?, ordonnance=?
                             WHERE id=?
                         """, (
                             provider_input.value,
                             uploaded_image_path["value"],
-                            description_input.value,
-                            reference_input.value,
+                            description_fr_input.value,
+                            description_en_input.value,
+                            reference_fr_input.value,
+                            reference_en_input.value,
                             category_input.value,
                             age_group_input.value,
+                            float(estimated_price_input.value) if estimated_price_input.value else None,
                             int(allow_reviews.value),
                             int(display_price.value),
                             int(allow_order.value),
@@ -414,6 +454,8 @@ def admin_products(request: Request):
                             pid,
                         ))
                         conn.commit()
+
+                    logger.info(f"Product {pid} edited", extra={"admin_user_id": user_id})
                     ui.notify(t("product_updated", lang_cookie), color="positive")
 
                 load_products()
@@ -443,7 +485,9 @@ def admin_products(request: Request):
                                 try:
                                     os.remove(pimage)
                                 except Exception as e:
-                                    print(f"{t('error_image_deletion', lang_cookie)}{e}")
+                                    logger.warning(f"Error deleting the image for {pid}: {e}", extra={"admin_user_id": user_id})
+                            
+                            logger.info(f"Product {pid} deleted", extra={"admin_user_id": user_id})
                             ui.notify(t("product_deleted", lang_cookie), color="warning")
                             form_container.clear()
                             load_products()

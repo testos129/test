@@ -5,13 +5,22 @@ import requests
 from urllib.parse import unquote
 import json
 
-from app.components.navbar import navbar
-from app.components.theme import apply_background
-from app.services.auth import get_current_user, sessions
-from app.services.users import record_visit, get_user_info
-from app.services.distance import haversine_dist
-from app.services.items import get_product, get_pharmacies_with_product, get_pharmacy
-from app.translations.translations import t
+from components.navbar import navbar
+from components.footer import footer_bar
+from components.theme import apply_background
+from services.auth import get_current_user
+from services.users import record_visit, get_user_info
+from services.distance import haversine_dist, distance_by_day
+from services.items import get_product, get_pharmacies_with_product, get_pharmacy, get_all_pharmacies
+from services.address import get_coords_from_address
+from services.logging_setup import get_logger
+from translations.translations import t
+
+from services.file_io import load_yaml
+functionalities_switch = load_yaml('components/functionalities_switch.yaml')
+ENABLE_MAX_DISTANCE_PHARMACY = functionalities_switch.get('ENABLE_MAX_DISTANCE_PHARMACY', True)
+ENABLE_SET_DISTANCE_LIMIT = functionalities_switch.get('ENABLE_SET_DISTANCE_LIMIT', True)
+ENABLE_USE_STOCK_MODE = functionalities_switch.get('ENABLE_USE_STOCK_MODE', True)
 
 
 @ui.page('/product/{product_id}/itinerary')
@@ -22,23 +31,74 @@ def product_itinerary(request: Request, product_id: str):
     # === Setup initial ===
 
     # Récupération de l'utilisateur et application du style global, de la barre de navigation et des cookies
-    if not get_current_user():
+    user_id = get_current_user(request)
+    if not user_id:
+        host = request.client.host
+        logger_default = get_logger('default')
+        logger_default.info(f"Access denied for page itinerary: no valid token, ip: {host}")
         return RedirectResponse('/')
-
-    token = app.storage.browser.get('token')
-    user_id = sessions[token]
+    
+    logger = get_logger('nav')
 
     user_info = get_user_info(user_id)
     if not user_info.get('is_confirmed', False) and not user_info.get('is_admin', False):  # utilisateur non confirmé et non admin
+        logger.info("Access denied for page itinerary: not confirmed", extra={"user_id": user_id})
         return RedirectResponse('/')
 
     record_visit(user_id, f'/product/{product_id}/itinerary')   # Page incluse dans l'historique de navigation
 
     apply_background()
     navbar(request)
+    footer_bar(request)
 
     lang_cookie = request.cookies.get("language", "fr")
-    distance_cookie = float(request.cookies.get("max_distance", "10"))
+
+    if ENABLE_SET_DISTANCE_LIMIT:  # Functionality switch pour laisser à l'utilisateur le choix de la distance max de recherche
+        distance_cookie = float(request.cookies.get("max_distance", distance_by_day()))
+    else:
+        distance_cookie = distance_by_day()
+
+    user_lat = request.cookies.get("user_lat")
+    user_lng = request.cookies.get("user_lng")
+
+
+    async def use_current_location():
+
+        """Demande la géolocalisation sans bloquer le rendu."""
+
+        js_code = """
+        new Promise((resolve, reject) => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    pos => {
+                        const lat = pos.coords.latitude;
+                        const lng = pos.coords.longitude;
+
+                        // Stocker les coordonnées dans les cookies pour 1 heure
+                        document.cookie = `user_lat=${lat}; path=/; max-age=3600; SameSite=Lax`;
+                        document.cookie = `user_lng=${lng}; path=/; max-age=3600; SameSite=Lax`;
+                        location.reload(); // recharge la page pour que Python voie les cookies
+
+                        // Résoudre la promesse avec les coordonnées
+                        resolve({lat, lng});
+                    },
+                    err => reject("Erreur: " + err.message)
+                );
+            } else {
+                reject("La géolocalisation n'est pas supportée par ce navigateur.");
+            }
+        });
+        """
+        try:
+            await ui.run_javascript(js_code, timeout=10.0)
+        except Exception as e:
+            ui.notify(f"Erreur géolocalisation : {e}", color="red")
+            print("❌ Erreur géoloc:", e)
+
+    # Lancer la géoloc sans bloquer le rendu initial
+    if not request.cookies.get("user_lat") or not request.cookies.get("user_lng"):
+        ui.timer(0.5, use_current_location, once=True)
+
 
     # Bouton retour
     with ui.row().classes('w-full p-4 items-center'):
@@ -46,6 +106,7 @@ def product_itinerary(request: Request, product_id: str):
             t("return_map", lang_cookie),
             on_click=lambda pid=product_id: ui.navigate.to(f'/product/{pid}/map')
         ).classes('btn-back')
+
 
     # === Titre de la page ===
     product = get_product(int(product_id))
@@ -65,23 +126,17 @@ def product_itinerary(request: Request, product_id: str):
 
     # === Gestion du cas où l'adresse est fournie directement (sans les coordonnées) ===
     if address and not lat and not lng:
-        address = unquote(address)
-        try:
-            geo_resp = requests.get(
-                "https://nominatim.openstreetmap.org/search",   # Recherche des coordonnées pour cette adresse sur openstreetmap
-                params={"q": address, "format": "json", "limit": 1},
-                headers={"User-Agent": "AppPrototype"}
-            )
-            geo_data = geo_resp.json()
-            if geo_data:
-                lat = float(geo_data[0]['lat'])
-                lng = float(geo_data[0]['lon'])
-            else:
+
+        result_address = get_coords_from_address(address)
+        if result_address[0]:
+            lat, lng = result_address[1]
+        else:
+            if result_address[1] == "no_addr_found":
                 ui.label(t("no_addr_found", lang_cookie)).classes('text-red-500 text-lg italic')
                 return
-        except Exception as e:
-            ui.label(f"{'error_geocoding', lang_cookie}{e}").classes('text-red-500')
-            return
+            else:
+                ui.label(f"{'error_geocoding', lang_cookie}{result_address[2]}").classes('text-red-500')
+                return
 
     if not lat or not lng:
         ui.label(t("missing_coords", lang_cookie))\
@@ -93,7 +148,10 @@ def product_itinerary(request: Request, product_id: str):
 
 
     # === Trouver les pharmacies avec le produit ===
-    pharmacy_ids = get_pharmacies_with_product(int(product_id))
+    if ENABLE_USE_STOCK_MODE:
+        pharmacy_ids = get_pharmacies_with_product(int(product_id))
+    else:  # mode no stock : toutes les pharmacies
+        pharmacy_ids = get_all_pharmacies()
 
     pharmacies_with_product = [
         {
@@ -108,8 +166,20 @@ def product_itinerary(request: Request, product_id: str):
         ui.label(t("no_pharmacies", lang_cookie)).classes('text-red-500')
         return
     
+
+    if ENABLE_MAX_DISTANCE_PHARMACY:  # Filtre sur uniquement les pharmacies à une distance inférieure au seuil fixé de l'utilisateur
+        pharmacies_with_product_filt = []
+        for entry in pharmacies_with_product:
+
+            if lat and lng:  # Filtre sur la distance par rapport à la requête
+                distance = haversine_dist(float(lat), float(lng), entry["lat"], entry["lng"])
+                if distance <= distance_cookie:
+                    pharmacies_with_product_filt.append(entry)   
+    else:
+        pharmacies_with_product_filt = pharmacies_with_product
+    
     pharmacies_sorted = sorted(
-        pharmacies_with_product,
+        pharmacies_with_product_filt,
         key=lambda ph: haversine_dist(lat, lng, ph["lat"], ph["lng"])
     )[:3]  # Limiter aux 3 pharmacies les plus proches pour éviter trop de calculs
 
@@ -183,7 +253,7 @@ def product_itinerary(request: Request, product_id: str):
                 crossOrigin: true
             }}).addTo(map);
 
-            var pharmacies = {json.dumps(pharmacies_with_product)};
+            var pharmacies = {json.dumps(pharmacies_with_product_filt)};
             var pharmacies_search = {json.dumps(pharmacies_sorted)};
             var shortestTime = Infinity;
             var bestRoute = null;

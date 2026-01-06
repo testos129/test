@@ -1,12 +1,16 @@
 import sqlite3
-from pathlib import Path
 from rapidfuzz import fuzz
 
-from app.services.file_io import load_json
+from services.file_io import load_json, load_yaml
+from services.distance import haversine_dist
+from services.logging_setup import get_logger
 
-DATA_DIR = Path(__file__).resolve().parents[1] / 'data'
-DB_PATH = DATA_DIR / 'data.db'
+functionalities_switch = load_yaml('components/functionalities_switch.yaml')
+ENABLE_USE_STOCK_MODE = functionalities_switch.get('ENABLE_USE_STOCK_MODE', True)
 
+logger = get_logger('default')
+
+DB_PATH = "data/data.db"
 
 def get_connection():
     return sqlite3.connect(DB_PATH)
@@ -22,7 +26,7 @@ def get_product(product_id: int) -> dict | None:
 
         # === Table Produit principale ===
         cursor.execute("""
-            SELECT id, name, provider, image, description, reference, category, age_group, allow_reviews, display_price, allow_order, display_recommendations, ordonnance
+            SELECT id, name, provider, image, description_fr, description_en, reference_fr, reference_en, category, age_group, estimated_price, allow_reviews, display_price, allow_order, display_recommendations, ordonnance
             FROM products
             WHERE id = ?
         """, (product_id,))
@@ -36,17 +40,20 @@ def get_product(product_id: int) -> dict | None:
             "name": row[1],
             "provider": row[2],
             "image": row[3],
-            "description": row[4],
-            "reference": row[5],
+            "description_fr": row[4],
+            "description_en": row[5],
+            "reference_fr": row[6],
+            "reference_en": row[7],
             "component": [],
             "tags": [],
-            "category": row[6],
-            "age_group": row[7],
-            "allow_reviews": bool(row[8]),
-            "display_price": bool(row[9]),
-            "allow_order": bool(row[10]),
-            "display_recommendations": bool(row[11]),
-            "ordonnance": bool(row[12])
+            "category": row[8],
+            "age_group": row[9],
+            "estimated_price": row[10],
+            "allow_reviews": bool(row[11]),
+            "display_price": bool(row[12]),
+            "allow_order": bool(row[13]),
+            "display_recommendations": bool(row[14]),
+            "ordonnance": bool(row[15])
         }
 
         # === Récupérer les composants ===
@@ -91,7 +98,7 @@ def delete_product(product_id: int) -> bool:
             conn.commit()
         return True
     except Exception as e:
-        print("Erreur suppression produit:", e)
+        logger.warning(f"Fail to delete product {product_id}: {e}")
         return False
     
 
@@ -190,9 +197,13 @@ def search_filter_product(query: str = "",
             matches_price = True
             if selected_filters["prices"]:
                 min_price_found = None
-                price_info = get_min_price_for_product(product["id"])
-                if price_info:
-                    min_price_found = price_info["price"]
+
+                if ENABLE_USE_STOCK_MODE:
+                    price_info = get_min_price_for_product(product["id"])
+                    if price_info:
+                        min_price_found = price_info["price"]
+                else:
+                    min_price_found = product['estimated_price']
 
                 # Si on a trouvé un prix, vérifier qu’il est dans au moins une des tranches sélectionnées
                 if min_price_found is not None:
@@ -201,7 +212,7 @@ def search_filter_product(query: str = "",
                         for (mn, mx) in selected_filters["prices"]
                     )
                 else:
-                    matches_price = False  # produit non disponible
+                    matches_price = False  # produit ou prix non disponible
 
             if not matches_price:
                 continue
@@ -212,6 +223,50 @@ def search_filter_product(query: str = "",
                 results.append(product)
 
     return results
+
+
+def get_nearby_products(user_lat, user_lng, max_distance_km, product_ids):
+
+    """
+    Renvoie la liste des produits disponibles dans au moins une pharmacie
+    située à moins de `max_distance_km` kilomètres de l'utilisateur.
+
+    Args:
+        user_lat (float): Latitude de l'utilisateur.
+        user_lng (float): Longitude de l'utilisateur.
+        max_distance_km (float): Distance maximale en kilomètres.
+        product_ids (list[int]): Liste des IDs de produits à vérifier.
+
+    Returns:
+        list[int]: Liste des product_id ayant au moins une pharmacie à distance <= max_distance_km.
+    """
+
+    nearby_products = set()
+
+    with get_connection() as conn:
+        cursor = conn.cursor()
+
+        # Récupérer les pharmacies pour chaque produit
+        placeholders = ','.join('?' for _ in product_ids)
+        query = f"""
+            SELECT pp.product_id, p.latitude, p.longitude
+            FROM pharmacy_products AS pp
+            JOIN pharmacies AS p ON p.id = pp.pharmacy_id
+            WHERE pp.product_id IN ({placeholders})
+              AND p.latitude IS NOT NULL
+              AND p.longitude IS NOT NULL
+        """
+
+        cursor.execute(query, product_ids)
+        results = cursor.fetchall()
+
+        # Vérifie la distance pour chaque produit/pharmacie
+        for product_id, lat, lng in results:
+            distance = haversine_dist(user_lat, user_lng, lat, lng)
+            if distance <= max_distance_km:
+                nearby_products.add(product_id)
+
+    return list(nearby_products)
 
 
 def get_filter_options(column):
@@ -231,13 +286,22 @@ def count_products_in_price_range(min_price, max_price):
     
     with get_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT id FROM products")
-        product_ids = [row[0] for row in cursor.fetchall()]
-        count = 0
-        for pid in product_ids:
-            price_info = get_min_price_for_product(pid)
-            if price_info and min_price <= price_info['price'] < max_price:
-                count += 1
+
+        if ENABLE_USE_STOCK_MODE:
+            cursor.execute("SELECT id FROM products")
+            product_ids = [row[0] for row in cursor.fetchall()]
+            count = 0
+            for pid in product_ids:
+                price_info = get_min_price_for_product(pid)
+                if price_info and min_price <= price_info['price'] < max_price:
+                    count += 1
+        else:
+            cursor.execute("SELECT estimated_price FROM products")
+            prices = [row[0] for row in cursor.fetchall()]
+            count = 0
+            for price in prices:
+                if price and min_price <= price < max_price:
+                    count += 1
 
         return count
     
@@ -305,7 +369,7 @@ def delete_pharmacy(pharmacy_id: int) -> bool:
         return True
 
     except Exception as e:
-        print("Erreur suppression pharmacie:", e)
+        logger.warning(f"Fail to delete pharmacie {pharmacy_id}: {e}")
         return False
 
 
@@ -336,6 +400,34 @@ def get_pharmacies_with_product(product_id: int) -> list[dict]:
                 "phone_number": row[5],
                 "price": row[6],
                 "qty": row[7],
+            })
+
+        return pharmacies
+    
+
+def get_all_pharmacies() -> list[dict]:
+    
+    """
+    Récupère la liste de toutes les pharmacies avec leurs informations complètes.
+    """
+
+    with get_connection() as conn:
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT id, name, address, latitude, longitude, phone_number
+            FROM pharmacies
+        """)
+
+        pharmacies = []
+        for row in cursor.fetchall():
+            pharmacies.append({
+                "id": row[0],
+                "name": row[1],
+                "address": row[2],
+                "latitude": row[3],
+                "longitude": row[4],
+                "phone_number": row[5],
             })
 
         return pharmacies
@@ -415,14 +507,21 @@ def get_total_qty(product_id: int) -> int:
             WHERE product_id = ?
         """, (product_id,))
         row = cursor.fetchone()
-        return row[0] or 0
-    
 
-def get_total_price_for_product(product_id: int, quantity: int) -> dict:
+        return row[0] or 0
+
+
+def get_total_price_for_product(product_id: int, 
+                                quantity: int, 
+                                lat: float | None = None, 
+                                lng: float | None = None, 
+                                dist: float | None = None) -> dict:
 
     """
     Calcule le prix total pour une quantité donnée de produit en prenant d'abord les pharmacies les moins chères.
-    
+    Si lat, lng et dist sont fournis, seules les pharmacies situées à une distance inférieure à 'dist'
+    des coordonnées données sont prises en compte.
+
     Retourne un dict :
     {
         "success": bool,
@@ -438,9 +537,9 @@ def get_total_price_for_product(product_id: int, quantity: int) -> dict:
     with get_connection() as conn:
         cursor = conn.cursor()
 
-        # Récupérer toutes les pharmacies qui ont ce produit, triées par prix croissant
+        # Récupération de toutes les pharmacies qui ont ce produit, triées par prix
         cursor.execute("""
-            SELECT p.id, p.name, pp.price, pp.qty
+            SELECT p.id, p.name, p.latitude, p.longitude, pp.price, pp.qty
             FROM pharmacies p
             JOIN pharmacy_products pp ON p.id = pp.pharmacy_id
             WHERE pp.product_id = ? AND pp.qty > 0
@@ -448,15 +547,31 @@ def get_total_price_for_product(product_id: int, quantity: int) -> dict:
         """, (product_id,))
 
         rows = cursor.fetchall()
-
         if not rows:
             return {"success": False, "total_price": 0.0, "details": [], "missing_qty": quantity}
 
+        # === Étape 1 : filtrage par distance si demandé ===
+        filtered_rows = []
+        if lat is not None and lng is not None and dist is not None:
+            for pharmacy_id, pharmacy_name, ph_lat, ph_lng, price, stock in rows:
+                if ph_lat is None or ph_lng is None:
+                    continue
+                distance = haversine_dist(lat, lng, ph_lat, ph_lng)
+                if distance <= dist:
+                    filtered_rows.append((pharmacy_id, pharmacy_name, ph_lat, ph_lng, price, stock))
+        else:
+            filtered_rows = rows
+
+        # Si aucune pharmacie disponible après filtrage
+        if not filtered_rows:
+            return {"success": False, "total_price": 0.0, "details": [], "missing_qty": quantity}
+
+        # === Étape 2 : calcul du prix total ===
         total_price = 0.0
         details = []
         remaining = quantity
 
-        for pharmacy_id, pharmacy_name, price, stock in rows:
+        for pharmacy_id, pharmacy_name, ph_lat, ph_lng, price, stock in filtered_rows:
             if remaining <= 0:
                 break
 
@@ -477,6 +592,48 @@ def get_total_price_for_product(product_id: int, quantity: int) -> dict:
             "details": details,
             "missing_qty": remaining
         }
+    
+
+def get_closest_pharmacy(lat, lng, dist=None):
+
+    """Renvoie la pharmacie la plus proche des coordonnées (lat, lng).
+    Si dist est fourni, ne renvoie que si la distance minimale est <= dist.
+    """
+
+    with get_connection() as conn:
+        cursor = conn.cursor()
+
+        # Récupération de toutes les pharmacies
+        cursor.execute("""
+            SELECT id, name, latitude, longitude
+            FROM pharmacies
+            WHERE latitude IS NOT NULL AND longitude IS NOT NULL
+        """)
+        pharmacies = cursor.fetchall()
+
+    if not pharmacies:
+        return {"success": False, "pharmacy": None, "distance": None}
+
+    closest = None
+    min_distance = float("inf")
+
+    for ph_id, ph_name, ph_lat, ph_lng in pharmacies:
+        distance = haversine_dist(lat, lng, ph_lat, ph_lng)
+        if distance < min_distance:
+            min_distance = distance
+            closest = {
+                "id": ph_id,
+                "name": ph_name,
+                "latitude": ph_lat,
+                "longitude": ph_lng,
+            }
+
+    # Si dist est fourni, vérifier que la distance minimale est <= dist
+    if dist is not None and min_distance > dist:
+
+        return {"success": False, "pharmacy": None, "distance": min_distance}
+
+    return {"success": True, "pharmacy": closest, "distance": min_distance}
 
 
 def remove_stock_product(product_id: int, qty: int) -> dict:

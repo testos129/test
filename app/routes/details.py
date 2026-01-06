@@ -3,22 +3,25 @@ from fastapi.responses import RedirectResponse
 from datetime import datetime
 from fastapi import Request
 
-from app.components.navbar import navbar
-from app.components.theme import apply_background
-from app.services.auth import get_current_user, sessions
-from app.services.reviews import get_average_rating, get_review_infos
-from app.services.users import record_visit, add_panier_item, get_connection, get_user_from_id, get_user_info
-from app.services.items import get_tag_color, get_product, get_min_price_for_product
-from app.recommendations.recommendations import find_similar_products
-from app.recommendations.user_product_matrix import update_interaction, update_with_page
-from app.translations.translations import t
+from components.navbar import navbar
+from components.footer import footer_bar
+from components.theme import apply_background
+from services.auth import get_current_user
+from services.reviews import get_average_rating, get_review_infos
+from services.users import record_visit, add_panier_item, get_connection, get_user_from_id, get_user_info
+from services.items import get_tag_color, get_product, get_min_price_for_product
+from recommendations.recommendations import find_similar_products
+from recommendations.user_product_matrix import update_interaction, update_with_page
+from services.logging_setup import get_logger
+from translations.translations import t
 
-from app.services.file_io import load_json, load_yaml
+from services.file_io import load_json, load_yaml
 functionalities_switch = load_yaml('components/functionalities_switch.yaml')
 FILTER_PRODUCT_REVIEWS_ENABLED = functionalities_switch.get('FILTER_PRODUCT_REVIEWS_ENABLED', True)
 FILTER_PRICE_DISPLAY_ENABLED = functionalities_switch.get('FILTER_PRICE_DISPLAY_ENABLED', True)
 FILTER_RECOMMENDATIONS_ENABLED = functionalities_switch.get('FILTER_RECOMMENDATIONS_ENABLED', True)
 FILTER_PRODUCT_COMMENTS_ENABLED = functionalities_switch.get('FILTER_PRODUCT_COMMENTS_ENABLED', True)
+ENABLE_USE_STOCK_MODE = functionalities_switch.get('ENABLE_USE_STOCK_MODE', True)
 banwords_list = load_json('components/banwords.json')['banwords']
 
 
@@ -30,14 +33,19 @@ def product_detail(product_id: str, request: Request):
     # === Setup initial ===
 
     # Récupération de l'utilisateur et application du style global, de la barre de navigation et des cookies
-    if not get_current_user():
+    user_id = get_current_user(request)
+    if not user_id:
+        host = request.client.host
+        logger_default = get_logger('default')
+        logger_default.info(f"Access denied for page product details: no valid token, ip: {host}")
         return RedirectResponse('/')
 
-    token = app.storage.browser.get('token')
-    user_id = sessions[token]
+    logger = get_logger('nav')
+    logger_admin = get_logger('admin')
 
     user_info = get_user_info(user_id)
     if not user_info.get('is_confirmed', False) and not user_info.get('is_admin', False):  # utilisateur non confirmé et non admin
+        logger.info("Access denied for page product details: not confirmed", extra={"user_id": user_id})
         return RedirectResponse('/')
 
     page = f'/product/{product_id}'
@@ -46,9 +54,9 @@ def product_detail(product_id: str, request: Request):
 
     apply_background()
     navbar(request)
+    footer_bar(request)
 
     lang_cookie = request.cookies.get("language", "fr")
-    distance_cookie = float(request.cookies.get("max_distance", "10"))
 
     # Récupération du produit
     product = get_product(int(product_id))
@@ -98,25 +106,57 @@ def product_detail(product_id: str, request: Request):
                 ).style("background-color: #FFFFFF")  #F8FFFE
 
                 # === Prix + ordonnance ===
-                with ui.row().classes('items-center justify-center gap-4 mb-0'):
-                    min_product_price = get_min_price_for_product(product['id'])
-                    if min_product_price:
+                # with ui.row().classes('items-center justify-center gap-4 mb-0'):
+                with ui.row().classes('items-center justify-between w-full mb-0'):
+                    with ui.row().classes('items-center gap-4'):
                         if product.get('display_price', False) and FILTER_PRICE_DISPLAY_ENABLED:  # Switch de functionnalité pour désactiver l'affichage du prix
-                            with ui.row().classes('items-center justify-center mb-4'):
-                                ui.label(t("price_from", lang_cookie)).classes('text-lg font-semibold')
-                                ui.label(f"{min_product_price['price']:.2f} €").classes('price-chip')
-                    else:
-                        ui.label(t("not_available", lang_cookie)).classes('text-lg font-semibold text-gray-500')
+                            
+                            if ENABLE_USE_STOCK_MODE:  # Stock mode
+                                min_product_price = get_min_price_for_product(product['id'])
+                                if min_product_price:
+                                    with ui.row().classes('items-center justify-center mb-4'):
+                                        ui.label(t("price_from", lang_cookie)).classes('text-lg font-semibold')
+                                        ui.label(f"{min_product_price['price']:.2f} €").classes('price-chip')
+                                else:
+                                    ui.label(t("not_available", lang_cookie)).classes('text-lg font-semibold')
+                            
+                            else:  # No stock mode
+                                price = product['estimated_price']
+                                if price:
+                                    with ui.row().classes('items-center justify-center mb-4'):
+                                        ui.label(t("estimated_price_2", lang_cookie)).classes('text-lg font-semibold')
+                                        ui.label(f"~ {price:.2f} €").classes('price-chip')
+                                else:
+                                    ui.label(t("no_estimated_price", lang_cookie)).classes('text-lg font-semibold')
+                        
 
-                    if product.get('ordonnance', False):
-                        ui.label(t("prescription", lang_cookie)).classes(
-                            'bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full'
-                        )
+                        if product.get('ordonnance', False):
+                            ui.label(t("prescription", lang_cookie)).classes(
+                                'bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full'
+                            )
+
+                    # Ajout au panier
+                    def add_and_register(user_id, pid):
+                        if add_panier_item(user_id, pid, request):
+                            update_interaction(user_id, pid, increment=5)
+
+                    ui.button(t("add_panier", lang_cookie),
+                        on_click=lambda pid=product_id: add_and_register(user_id, pid)) \
+                            .classes(
+                                'btn-cart ml-auto scale-125 -translate-x-5 -translate-y-1 '
+                                'transition-transform duration-200 hover:scale-[1.3]'
+                            )
 
                 # === Description du produit ===
-                ui.label(product["description"]).classes(
-                    'text-base text-gray-700 text-center max-w-2xl mx-auto mt-2'
-                )
+                if lang_cookie == "fr":
+                    desc = product["description_fr"]
+                elif lang_cookie == "en":
+                    desc = product["description_en"]
+                # Par défaut description en français
+                else:
+                    desc = product["description_fr"]
+
+                ui.label(desc).classes('text-base text-gray-700 text-center max-w-2xl mx-auto mt-2')
 
                 # === Tags du produit 
                 with ui.row().classes('flex-wrap justify-center gap-2 mt-4'):
@@ -126,19 +166,11 @@ def product_detail(product_id: str, request: Request):
                     if len(product['tags']) > 5:
                         ui.label('...').classes('text-gray-500 text-xs')
 
-                # === Boutons d’action ===
+                # === Boutons disponibilité ===
                 with ui.row().classes('mt-6 gap-3 justify-center'):
                     # Check disponibilité
                     ui.button(t("see_availabilities", lang_cookie),
                             on_click=lambda pid=product_id: ui.navigate.to(f'/product/{pid}/map')).classes('btn-secondary')
-                    
-                    # Ajout au panier
-                    def add_and_register(user_id, pid):
-                        if add_panier_item(user_id, pid, request):
-                            update_interaction(user_id, pid, increment=5)
-
-                    ui.button(t("add_panier", lang_cookie),
-                            on_click=lambda pid=product_id: add_and_register(user_id, pid)).classes('btn-cart')
 
 
             # === Ecriture d'un commentaire et notation ===
@@ -202,6 +234,7 @@ def product_detail(product_id: str, request: Request):
 
                         for banword in banwords_list:
                             if new_comment and banword in new_comment:
+                                logger.info(f"Comment rejected because it contains the banword {banword} for product {product_id}", extra={"user_id": user_id})
                                 ui.notify(t("banword", lang_cookie), color="negative")
                                 return
 
@@ -214,6 +247,7 @@ def product_detail(product_id: str, request: Request):
                                 (new_comment if new_comment else "", int(new_rating) if new_rating is not None else 0, review_id),
                             )
                             conn.commit()
+                        logger.info(f"Comment modified for product: {product_id}", extra={"user_id": user_id})
                         ui.notify(t("comment_modified", lang_cookie), color="positive")
                         update_reviews_display()
 
@@ -294,7 +328,7 @@ def product_detail(product_id: str, request: Request):
                                     else:
                                         if FILTER_PRODUCT_COMMENTS_ENABLED:   # Switch de functionnalité pour désactiver la possibilité d'écrire un commentaire
                                             ui.label(review["comment"]).classes("text-gray-700 mt-2")
-                                        if review["user_id"] == get_current_user() and user_info['allow_comments']:
+                                        if review["user_id"] == get_current_user(request) and user_info['allow_comments']:
                                             with ui.row().classes("gap-2 mt-2"):
                                                 ui.button(t("modify", lang_cookie), on_click=lambda e, r=review: start_edit(r["id"])) \
                                                     .props("outline").classes("btn-edit")
@@ -311,7 +345,7 @@ def product_detail(product_id: str, request: Request):
 
                         """Enregistre ou met à jour l'avis d'un utilisateur connecté pour un produit donné dans la base de données."""
 
-                        user_id = get_current_user()
+                        user_id = get_current_user(request)
                         if not user_id:
                             ui.notify(t("connected_to_review", lang_cookie), color="negative")
                             return
@@ -360,7 +394,7 @@ def product_detail(product_id: str, request: Request):
                         Sinon on supprime l'avis de l'utilisateur courant (fallback).
                         """
 
-                        user_id = get_current_user()
+                        user_id = get_current_user(request)
                         if not user_id:
                             ui.notify(t("connected_to_review", lang_cookie), color="negative")
                             return
@@ -379,9 +413,15 @@ def product_detail(product_id: str, request: Request):
                                         (product_id, review_info["user_id"],
                                             review_info["comment"], review_info["rating"]))
                             conn.commit()
+
+                        if review_info['user_id'] != user_id: # admin edit
+                            logger_admin.info(f"Comment from user {review_info['user_id']} deleted for product {product_id}", extra={"admin_user_id": user_id})
+                        else:  # user edit
+                            logger.info(f"Comment deleted for product {product_id}", extra={"user_id": user_id})
                         ui.notify(t("review_deleted", lang_cookie), color="positive")
                         update_reviews_display()
 
+                    # Initial display
                     update_reviews_display()
 
 

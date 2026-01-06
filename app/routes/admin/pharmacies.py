@@ -2,12 +2,14 @@ from nicegui import ui, app
 from fastapi.responses import RedirectResponse
 from fastapi import Request
 
-from app.services.auth import get_current_user, sessions
-from app.components.navbar import navbar
-from app.components.theme import apply_background
-from app.services.users import get_user_info, get_connection
-from app.services.items import delete_pharmacy
-from app.translations.translations import t
+from services.auth import get_current_user
+from components.navbar import navbar
+from components.footer import footer_bar
+from components.theme import apply_background
+from services.users import get_user_info, get_connection
+from services.items import delete_pharmacy
+from services.logging_setup import get_logger
+from translations.translations import t
 
 
 @ui.page('/admin/pharmacies')
@@ -18,22 +20,28 @@ def admin_pharmacies(request: Request):
     # === Setup initial ===
 
     # Récupération de l'utilisateur et application du style global, de la barre de navigation et des cookies
-    if not get_current_user():
+    user_id = get_current_user(request)
+    if not user_id:
+        host = request.client.host
+        logger_default = get_logger('default')
+        logger_default.info(f"Access denied for admin page pharmacies: no valid token, ip: {host}")
         return RedirectResponse('/')
-
-    token = app.storage.browser.get('token')
-    user_id = sessions[token]
     
     # Vérification des droits admin
     user_info = get_user_info(user_id)
     if not user_info.get('is_admin', False):
+        logger_user = get_logger('nav')
+        logger_user.info(f"Tried to open pharmacies management page but was denied", extra={"user_id": user_id})
         return RedirectResponse('/home')
     
     apply_background()
     navbar(request)
+    footer_bar(request)
+
+    logger = get_logger('admin')
+    logger.info("Pharmacies management page consulted", extra={"admin_user_id": user_id})
 
     lang_cookie = request.cookies.get("language", "fr")
-    distance_cookie = float(request.cookies.get("max_distance", "10"))
 
     state = {
         "page": 0,
@@ -117,6 +125,7 @@ def admin_pharmacies(request: Request):
             if len(pharmacies) == 5:
                 ui.button(icon='chevron_right', on_click=lambda: change_page(1)).classes('bg-gray-200 rounded px-3')
 
+
     def change_page(delta: int):
 
         state["page"] += delta
@@ -173,6 +182,7 @@ def admin_pharmacies(request: Request):
                         if not name_input.value.strip():
                             ui.notify(t("name_mandatory", lang_cookie), color="negative")
                             return
+                        
                         if not latitude_input.value.strip() or not longitude_input.value.strip():
                             ui.notify(t("lat_long_mandatory", lang_cookie), color="negative")
                             return
@@ -196,6 +206,7 @@ def admin_pharmacies(request: Request):
                         pid = cur.lastrowid
                         conn.commit()
 
+                        logger.info(f"Pharmacie added: {pid}", extra={"admin_user_id": user_id})
                         ui.notify(t("pharmacy_added", lang_cookie), color="positive")
                         # Recharge directement en mode edit
                         pharmacy_form("edit", pid)
@@ -214,6 +225,7 @@ def admin_pharmacies(request: Request):
                         ))
                         conn.commit()
 
+                        logger.info(f"Pharmacie edited: {pid}", extra={"admin_user_id": user_id})
                         ui.notify(t("pharmacy_updated", lang_cookie), color="positive")
                         load_pharmacies()
                         pharmacy_form("edit", pid)
@@ -264,9 +276,12 @@ def admin_pharmacies(request: Request):
                                                 WHERE id=?
                                             """, (float(price_input.value), int(qty_input.value), row_id))
                                             conn.commit()
+
+                                        logger.info(f"Products modified for pharmacy: {pid}", extra={"admin_user_id": user_id})
                                         ui.notify(t("product_updated", lang_cookie), color="positive")
+                                    
                                     except Exception as e:
-                                        print("Error update product:", e)
+                                        logger.warning(f"Error updating product: {e}", extra={"admin_user_id": user_id})
                                         ui.notify(t("update_error", lang_cookie), color="negative")
 
                                 def delete_product_from_pharmacy(row_id=row_id):
@@ -278,10 +293,13 @@ def admin_pharmacies(request: Request):
                                             cur = conn.cursor()
                                             cur.execute("DELETE FROM pharmacy_products WHERE id=?", (row_id,))
                                             conn.commit()
+
+                                        logger.info(f"Product {row_id} deleted for pharmacy {pid}", extra={"admin_user_id": user_id})
                                         ui.notify(t("product_removed", lang_cookie), color="warning")
                                         load_pharmacy_products()
+
                                     except Exception as e:
-                                        print("Erreur deletion product:", e)
+                                        logger.warning(f"Error deletion product: {e}", extra={"admin_user_id": user_id})
                                         ui.notify(t("deletion_error", lang_cookie), color="negative")
 
                                 ui.button("💾", on_click=save_update).props("flat").classes(
@@ -318,10 +336,13 @@ def admin_pharmacies(request: Request):
                                     VALUES (?, ?, ?, ?)
                                 """, (pid, product_select.value, float(price_input_new.value or 0), int(qty_input_new.value or 0)))
                                 conn.commit()
+
+                            logger.info(f"Product {product_select.value} added in pharmacy: {pid}", extra={"admin_user_id": user_id})
                             ui.notify(t("product_added_or_updated", lang_cookie), color="positive")
                             load_pharmacy_products()
+
                         except Exception as e:
-                            print("Erreur ajout produit:", e)
+                            logger.warning(f"Error adding product: {e}", extra={"admin_user_id": user_id})
                             ui.notify(t("add_error", lang_cookie), color="negative")
 
                     ui.button("Ajouter", on_click=add_product_to_pharmacy).classes("bg-green-500 text-white rounded px-4 py-2 mt-2")
@@ -332,10 +353,12 @@ def admin_pharmacies(request: Request):
                     """Supprime la pharmacie après confirmation."""
 
                     if delete_pharmacy(pid):
+                        logger.info(f"Pharmacy {pid} deleted", extra={"admin_user_id": user_id})
                         ui.notify(t("pharmacy_deleted", lang_cookie), color="warning")
                         form_container.clear()
                         load_pharmacies()
                     else:
+                        logger.info(f"Failed to delete pharmacy {pid}", extra={"admin_user_id": user_id})
                         ui.notify(t("error_pharmacy_deletion", lang_cookie), color="negative")
 
                 delete_button = ui.button(t("delete_3", lang_cookie)).props("flat").classes(

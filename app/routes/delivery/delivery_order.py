@@ -2,15 +2,33 @@ from nicegui import ui, app
 from fastapi import Request
 from fastapi.responses import RedirectResponse
 import json
+from datetime import datetime, timedelta
 
-from app.components.theme import apply_background
-from app.components.navbar_delivery import navbar_delivery
-from app.services.auth import get_current_user, sessions
-from app.services.users import get_user_info, get_order_details, take_order, get_orders_for_delivery_person
-from app.services.items import get_pharmacy, get_product
-from app.services.distance import optimize_route
-from app.services.settings import get_setting
-from app.translations.translations import t
+from components.theme import apply_background
+from components.navbar_delivery import navbar_delivery
+from components.footer import footer_bar
+from services.auth import get_current_user
+from services.users import get_user_info, get_order_details, take_order, get_orders_for_delivery_person
+from services.items import get_pharmacy, get_product
+from services.distance import optimize_route
+from services.settings import get_setting
+from services.geolocation import start_geolocation_tracking
+from services.logging_setup import get_logger
+from translations.translations import t
+
+
+class UserDistance:
+    def __init__(self, token):
+        self.token = token
+        self._distance = 0
+
+    @property
+    def distance(self):
+        return self._distance
+
+    @distance.setter
+    def distance(self, value):
+        self._distance = value
 
 
 @ui.page("/delivery/order/{order_id}")
@@ -19,28 +37,60 @@ def delivery_order_page(request: Request, order_id: int):
     """ Page de gestion d'une commande réservée."""
 
     # Récupération de l'utilisateur et application du style global, de la barre de navigation et des cookies
-    if not get_current_user():
+    user_id = get_current_user(request)
+    if not user_id:
+        host = request.client.host
+        logger_default = get_logger('default')
+        logger_default.info(f"Access denied for delivery page order: no valid token, ip: {host}")
         return RedirectResponse('/')
-
-    token = app.storage.browser.get('token')
-    user_id = sessions[token]
 
     user_info = get_user_info(user_id)
     if not user_info.get('is_admin', False):
         if not user_info.get('is_confirmed', False) or not user_info.get('is_delivery_person', False):  # utilisateur non confirmé ou non livreur
+            logger_user = get_logger('nav')
+            logger_user.info(f"Tried to open delivery order {order_id} page but was denied", extra={"user_id": user_id})
             return RedirectResponse('/')
     
     # Styles globaux + navbar + cookies
     apply_background()
     navbar_delivery(request)
+    footer_bar(request)
 
     lang_cookie = request.cookies.get("language", "fr")
 
+    logger = get_logger('delivery')
+
+    # Lance la récupération en continue de la géolocalisation
+    start_geolocation_tracking(user_id)
+
     # === Contenu de la page ===
-    # === Récupération des coordonnées utilisateur depuis les paramètres d'URL ===
-    params = request.query_params
-    user_lat = float(params.get('lat'))
-    user_lng = float(params.get('lng'))
+
+    # === Récupération des coordonnées utilisateur depuis la base ou les paramètres d'URL ===
+    if user_info['current_coords_date']:
+        last = datetime.strptime(user_info["current_coords_date"], "%Y-%m-%d %H:%M:%S")
+        delta = datetime.now() - last
+
+        if delta < timedelta(minutes=1):
+            user_lat = user_info['current_lat']
+            user_lng = user_info['current_lng']
+        else:
+            params = request.query_params
+            user_lat = params.get('lat')
+            user_lng = params.get('lng')
+    else:
+        params = request.query_params
+        user_lat = params.get('lat')
+        user_lng = params.get('lng')
+
+    # Test si les coordonnées ont été récupérées
+    if user_lat and user_lat != "None" and user_lng and user_lng != "None":
+        user_lat = float(user_lat)
+        user_lng = float(user_lng)
+    else:
+        with ui.row():
+            ui.button(t("return_home", lang_cookie), on_click=lambda: ui.navigate.to("/delivery/home")).classes("btn-back")
+        ui.label(t("need_geolocation", lang_cookie)).classes('text-xl font-semibold text-center text-gray-700 mx-auto')
+        return
     
     # Retour à l'accueil livreur et mes commandes
     with ui.row():
@@ -57,6 +107,7 @@ def delivery_order_page(request: Request, order_id: int):
         order_details = get_order_details(order_id)
 
         with ui.row().classes('w-full lg:grid lg:grid-cols-12 gap-6 mt-6'):
+
             # === Colonne gauche : information livraison ===
             with ui.column().classes('w-full lg:col-span-4 gap-4'):
                 
@@ -64,33 +115,47 @@ def delivery_order_page(request: Request, order_id: int):
                 with ui.card().classes('w-full p-4'):
                     ui.label(t("order_summary", lang_cookie)).classes("text-xl font-bold mb-4")
                     ui.label(f"{t('client_name', lang_cookie)}{order_details['customer']}").classes("mb-2")
-                    ui.label(f"{t('delivery_address', lang_cookie)}{order_details['address']}").classes("mb-2")
+                    ui.label(f"{t('delivery_address', lang_cookie)}{order_details['address']}")
+                    if order_details.get('address_details'):
+                            ui.label(f"{t('additional_details', lang_cookie)}{order_details['address_details']}").classes("mb-2")
                     ui.label(f"{t('order_date', lang_cookie)}{order_details['date']}").classes("mb-2")
-                    ui.label(t("items_ordered", lang_cookie)).classes("font-bold mt-4 mb-2")
+                    # ui.label(t("items_ordered", lang_cookie)).classes("font-bold mt-4 mb-2")
 
-                    for item in order_details['items']:
-                        product_name = get_product(item['product_id'])['name']
-                        qty = item['qty']
-                        pharmacy_name = get_pharmacy(item['pharmacy_id'])['name']
-                        ui.label(f"• {product_name} x{qty} ({t('from_pharmacy', lang_cookie)}: {pharmacy_name})").classes("mb-1")
+                    # for item in order_details['items']:
+                    #     product_name = get_product(item['product_id'])['name']
+                    #     qty = item['qty']
+                    #     pharmacy_name = get_pharmacy(item['pharmacy_id'])['name']
+                    #     ui.label(f"• {product_name} x{qty} ({t('from_pharmacy', lang_cookie)}: {pharmacy_name})").classes("mb-1")
 
                     ui.label(f"{t('delivery_cost', lang_cookie)}{order_details['delivery_cost']:.2f}€").classes("mt-4")
                     ui.label(f"{t('total_cost', lang_cookie)}{order_details['total']:.2f}€").classes("font-bold mt-2")
+
+                    label_distance = ui.label().props('id=label-distance').classes("font-bold mt-2")
+
 
                 # valider la livraison
                 def confirm_delivery():
 
                     """ Confirme la livraison de la commande. """
 
-                    max_order = int(get_setting('max_order_delivery', 2))
+                    default_max_delivery = 3
+
+                    max_order = get_setting('max_order_delivery', default_max_delivery)
+                    if max_order:
+                        max_order = int(max_order)
+                    else:
+                        max_order = default_max_delivery
 
                     if take_order(order_id, delivery_person_id=user_id, max_order=max_order):
+                        logger.info(f"Order {order_id} taken", extra={"delivery_user_id": user_id})
                         ui.notify(t("delivery_confirmed", lang_cookie), color="green")
                     else:
+                        logger.warning(f"Error taking order {order_id}", extra={"delivery_user_id": user_id})
                         ui.notify(t("error_confirming_delivery", lang_cookie), color="red")
 
                 ui.button(t("confirm_delivery", lang_cookie), on_click=confirm_delivery) \
                     .classes("btn-primary w-full mt-4")
+        
         
             # === Colonne droite : itinéraire ===
             with ui.column().classes('w-full lg:col-span-8'):
@@ -230,25 +295,31 @@ def delivery_order_page(request: Request, order_id: int):
                             // --- Calcul distance totale
                             var totalDistance = e.routes[0].summary.totalDistance; // mètres
                             console.log("Itinéraire trouvé. Distance totale:", totalDistance, "m");
+                            document.getElementById("label-distance").innerText = "{t('distance', lang_cookie)}" + totalDistance + " m";
 
                             // --- Envoi au backend (NiceGUI / FastAPI)
-                            fetch('/set_distance_order', {{
-                                method: 'POST',
-                                headers: {{ 'Content-Type': 'application/json' }},
-                                body: JSON.stringify({{ distance: totalDistance }})
-                            }})
-                            .then(r => r.json())
-                            .then(data => {{
-                                console.log("Distance envoyée avec succès:", data);
-                            }})
-                            .catch(err => {{
-                                console.error("Erreur lors de l'envoi de la distance:", err);
-                            }})
-                            .finally(() => {{
+                            //fetch('/set_distance_order', {{
+                            //    method: 'POST',
+                            //   headers: {{ 'Content-Type': 'application/json' }},
+                            //    body: JSON.stringify({{ distance: totalDistance }})
+                            //}})
+                            //.then(r => r.json())
+                            //.then(data => {{
+                                
+                            //    console.log("Distance envoyée avec succès:", data);
+                            //}})
+                            //.catch(err => {{
+                            //    console.error("Erreur lors de l'envoi de la distance:", err);
+                            //}})
+                            //.finally(() => {{
                                 // Toujours masquer les overlays même si erreur réseau
-                                if (overlay) overlay.style.display = 'none';
-                                if (deliveryOverlay) deliveryOverlay.style.display = 'none';
-                            }});
+                            //    if (overlay) overlay.style.display = 'none';
+                            //    if (deliveryOverlay) deliveryOverlay.style.display = 'none';
+                            //}});
+
+                            if (overlay) overlay.style.display = 'none';
+                            if (deliveryOverlay) deliveryOverlay.style.display = 'none';
+
                         }}).addTo(map);
 
                         // --- Masquer complètement le panneau de routage
@@ -289,16 +360,3 @@ def delivery_order_page(request: Request, order_id: int):
 
                     }}, 500);
                     """)
-                
-        ui.state.route_distance = 0  # valeur en mètres
-
-
-        # === Mise à jour du coût dans l'interface ===
-        @app.post("/set_distance_order")
-        async def set_distance_order(request: Request):
-
-            data = await request.json()
-            distance_m = data.get("distance", 0)
-            ui.state.route_distance = distance_m
-
-            return {"status": "ok"}
