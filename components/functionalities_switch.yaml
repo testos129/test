@@ -1,0 +1,53 @@
+# Active ou non le système d'avis et notations sur les produits ainsi que leur affichage
+FILTER_PRODUCT_REVIEWS_ENABLED: true
+
+# Active ou non la possibilité de laisser et voir des commentaires textuels sur les produits
+FILTER_PRODUCT_COMMENTS_ENABLED: false
+
+# Active la fonctionalité de masquage du prix sur les produits ('true' = les prix peuvent être masqués sur certains produits, 'false' = tous les prix sont affichés)
+FILTER_PRICE_DISPLAY_ENABLED: true
+
+# Affiche les recommandations de produits similaires sur la page d'un produit
+FILTER_RECOMMENDATIONS_ENABLED: true
+
+# Affiche les tags sur les produits
+DISPLAY_TAGS_ENABLED: true
+
+# Permet de filtrer les produits par nom de fournisseur
+ENABLE_FILTER_PROVIDER_NAME: false
+
+# Active l'envoie d'email de confirmation pour le statut confirmé (quand false, confirmation des utilisateurs par défaut)
+EMAIL_CONFIRMATION_SIGN_UP_ENABLED: false
+
+# Permet au livreur d’annuler une livraison en cours
+ALLOW_DELIVERY_CANCEL: false
+
+# Fixe une longueur minimale de mot de passe à l'inscription
+ENABLE_MIN_PASSWORD_LENGHT: false
+
+# Active la recherche dynamique pendant la saisie
+ENABLE_DYNAMIC_SEARCH: false
+
+# Active l'utilisation des stocks par pharmacie
+ENABLE_USE_STOCK_MODE: false
+
+# Active/désactive le filtre sur les pharmacies à une distance supérieure à un seuil par défaut ou choisi
+ENABLE_MAX_DISTANCE_PHARMACY: true
+
+# Active/désactive le choix de la distance max par l'utilisateur (quand désactivé seulement la distance par défaut s'applique)
+ENABLE_SET_DISTANCE_LIMIT: true
+
+# Cherche par défaut les adresses rentrées dans Paris
+ADDRESS_DEFAULT_PARIS: true
+
+# NOT USED
+# Active la possibilité de reset son mot de passe
+PASSWORD_RESET_ENABLED: true
+
+# NOT USED
+# Active la possibilité de supprimer son compte
+DELETE_ACCOUNT_ENABLED: true
+
+# NOT USED
+# Active la nécessité de se loger au panneau admin avec un mot de passe admin supplémentaire
+ADMIN_PASSWORD_ENABLED: true

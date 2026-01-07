@@ -1,0 +1,17 @@
+{
+    "site_name": "PharmaLink",
+    "site_version": "1.0.0",
+    "site_logo": "",
+    "theme_coler": "",
+    "admin_email": "",
+    "support_email": "",
+    "password_policy_min_length": 10,
+    "allow_user_registration": true,
+    "maintenance_mode": false,
+    "default_currency": "EUR",
+    "display_items_per_page": 20,
+    "free_delivery_threshold": 0,
+    "allow_guest_checkout": false,
+    "support_phone": "",
+    "show_notifications": true
+}
