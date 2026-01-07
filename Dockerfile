@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.11-slim AS base
+FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
@@ -16,12 +16,8 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
-COPY app ./app
+COPY . .
 
 EXPOSE 8080
 
-ENV APP_HOST=0.0.0.0 \
-    APP_PORT=8080 \
-    APP_RELOAD=false
-
-CMD ["python", "-m", "app.main"]
+CMD ["python", "main.py"]
