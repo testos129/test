@@ -1,11 +1,40 @@
-"""Application entry point for PharmaLink."""
+"""
+Application entry point for PharmaLink.
+"""
 
+import os
+import importlib
 from pathlib import Path
 
 from fastapi.staticfiles import StaticFiles
 from nicegui import app, ui
 
-# Import des pages
+# ----------------------------
+# Project paths
+# ----------------------------
+
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "data"
+STATIC_DIR = BASE_DIR / "static"
+
+DATA_DIR.mkdir(exist_ok=True)
+STATIC_DIR.mkdir(exist_ok=True)
+
+# ----------------------------
+# Static files
+# ----------------------------
+
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+app.mount(
+    "/data/images",
+    StaticFiles(directory=str(DATA_DIR / "images")),
+    name="images",
+)
+
+# ----------------------------
+# Page imports (side-effect based)
+# ----------------------------
+
 from routes import (
     admin_panel,
     details,
@@ -22,6 +51,7 @@ from routes import (
     thanks,
     wallet,
 )
+
 from routes.admin import analytics, orders, pharmacies, products, settings, users
 from routes.delivery import (
     delivery_home,
@@ -31,102 +61,70 @@ from routes.delivery import (
     delivery_wallet,
 )
 
-CURRENT_DIR = Path(__file__).resolve().parent
-if __package__ is None or __package__ == "":
-    sys.path.insert(0, str(CURRENT_DIR.parent))
-    __package__ = CURRENT_DIR.name
-
-
-from fastapi.staticfiles import StaticFiles
-from nicegui import app, ui
-
-BASE_DIR = Path(__file__).resolve().parent
-DATA_DIR = BASE_DIR / "data"
-
+# ----------------------------
+# Helpers
+# ----------------------------
 
 def _get_bool_env(var_name: str, default: bool) -> bool:
-    """Return a boolean value from an environment variable."""
     value = os.getenv(var_name)
     if value is None:
         return default
     return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
-def _resolve_module(*candidates: str):
-    """Return the first importable module from the provided candidates."""
-    for module_name in candidates:
-        if not module_name:
-            continue
-        try:
-            return importlib.import_module(module_name)
-        except ModuleNotFoundError:
-            continue
-    raise ModuleNotFoundError(
-        f"Unable to import any of the candidate modules: {', '.join(c for c in candidates if c)}"
-    )
+def _import_data_modules():
+    """
+    Import database bootstrap helpers.
+    Root-based imports only (no package hacks).
+    """
+    create_db = importlib.import_module("data.create_db")
+    migrate = importlib.import_module("data.migrate_json_to_sql")
+    return create_db, migrate
 
 
-def _load_data_modules():
-    """Load database bootstrap helpers regardless of execution context."""
-    package_name = __package__ or CURRENT_DIR.name
-    create_db_module = _resolve_module(
-        "app.data.create_db",
-        f"{package_name}.data.create_db" if package_name else None,
-        "data.create_db",
-    )
-    migrate_module = _resolve_module(
-        "app.data.migrate_json_to_sql",
-        f"{package_name}.data.migrate_json_to_sql" if package_name else None,
-        "data.migrate_json_to_sql",
-    )
-    return create_db_module, migrate_module
+# ----------------------------
+# Main bootstrap
+# ----------------------------
 
+def main() -> None:
+    create_db_module, migrate_module = _import_data_modules()
 
-def main():
-    """Application bootstrap routine used for both script and module execution."""
+    db_file = DATA_DIR / "data.db"
 
-    create_db_module, migrate_module = _load_data_modules()
-
-    # Initialisation des tables (vides) dans la base de données si elle n'existe pas
-    DB_FILE = DATA_DIR / "data.db"
-
-    app.mount(
-        "/data/images", StaticFiles(directory=str(DATA_DIR / "images")), name="images"
-    )
-
-    if not DB_FILE.exists():
+    if not db_file.exists():
         import sqlite3
 
-        init_db = create_db_module.init_db
-        migrate_pharmacies = migrate_module.migrate_pharmacies
-        migrate_products = migrate_module.migrate_products
-        migrate_settings = migrate_module.migrate_settings
-
-        conn = sqlite3.connect(DB_FILE)
         print("📂 Base de données inexistante, création en cours...")
-        init_db(conn)
-        print("🚀 Migration des données produits et pharmacies...")
-        migrate_products(conn)
-        migrate_pharmacies(conn)
-        migrate_settings(conn)
-        print("🎉 Migration terminée avec succès.")
-        conn.close()
-    else:
-        print(f"📂 Base de données trouvées dans {DB_FILE}")
+        conn = sqlite3.connect(db_file)
 
-    # Lancement de l'application
+        create_db_module.init_db(conn)
+
+        print("🚀 Migration des données produits et pharmacies...")
+        migrate_module.migrate_products(conn)
+        migrate_module.migrate_pharmacies(conn)
+        migrate_module.migrate_settings(conn)
+
+        conn.close()
+        print("🎉 Migration terminée avec succès.")
+    else:
+        print(f"📂 Base de données trouvée : {db_file}")
+
     host = os.getenv("APP_HOST", "0.0.0.0")
     port = int(os.getenv("APP_PORT", "8080"))
-    reload_app = _get_bool_env("APP_RELOAD", True)
+    reload_app = _get_bool_env("APP_RELOAD", False)
 
     ui.run(
         title="PharmaLink",
-        reload=reload_app,
         host=host,
         port=port,
-        storage_secret=os.getenv("APP_STORAGE_SECRET", "uwu"),
+        reload=reload_app,
+        storage_secret=os.getenv("APP_STORAGE_SECRET", "change-me"),
     )
 
 
-if __name__ in {"__main__", "__mp_main__"}:
+# ----------------------------
+# Entrypoint
+# ----------------------------
+
+if __name__ == "__main__":
     main()
